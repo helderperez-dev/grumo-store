@@ -89,7 +89,7 @@ def main() -> int:
         result = prepare_grumo_store(
             args.source, args.destination, backup=args.backup, dry_run=args.dry_run
         )
-    except (ValueError, OSError, RuntimeError, Exception) as error:
+    except Exception as error:
         # Safe, actionable CLI error. The underlying Store exceptions derive
         # from Exception and may not be from the Python standard library.
         parser.exit(1, f"Grumo Store migration failed: {error}\n")

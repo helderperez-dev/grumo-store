@@ -58,3 +58,38 @@ public identity changes; storage semantics and recovery guarantees do not.
 The Grumo brand is a unified programmable runtime, application framework,
 durable infrastructure engine, and distributed/edge execution ecosystem.
 Local-first is one supported deployment style, **not** the entire product.
+
+## Explicit migration command (implemented in this branch)
+
+**Stop the application and close the Store writer before invoking this
+command.** The utility verifies the source, creates an independent rollback
+copy, restores a second verified copy into the new path, and prints the
+identity of the resulting Store. It does not activate the new file.
+
+```bash
+python -m voodoo_store.grumo_migration \
+  .voodoo/application.vstore \
+  .grumo/application.grumo \
+  --backup backups/pre-grumo.vstore \
+  --dry-run
+
+python -m voodoo_store.grumo_migration \
+  .voodoo/application.vstore \
+  .grumo/application.grumo \
+  --backup backups/pre-grumo.vstore
+```
+
+The CLI still lives inside the old `voodoo_store` distribution during this
+transition. Once the new package is published, expose this through `grumo`
+and `grumo_store`. Paths are create-only: existing destination or backup
+files are not overwritten. The returned `activated: false` is intentional;
+configure the application to use the new file only after accepting test and
+backup evidence. Keep the legacy source for rollback.
+
+Run targeted tests:
+
+```bash
+python -m pytest -q python/tests/test_grumo_migration.py \
+  python/tests/test_operations.py
+```
+

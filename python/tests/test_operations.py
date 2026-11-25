@@ -47,10 +47,9 @@ def test_grumo_filename_preserves_legacy_store_format_and_identity(tmp_path: Pat
 
     new_path = tmp_path / ".grumo" / "application.grumo"
     new_path.parent.mkdir()
-    # The compatibility contract is a *copy*, never an in-place replacement.
-    import shutil
-
-    shutil.copy2(old_path, new_path)
+    # The compatibility contract uses the verified create-only restore path,
+    # never an in-place overwrite of the source.
+    Store.restore_copy(old_path, new_path)
     assert old_path.is_file()
     assert Store.verify(new_path).store_id == original_id
     with Store.open(new_path) as store:

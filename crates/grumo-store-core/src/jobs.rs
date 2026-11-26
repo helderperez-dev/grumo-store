@@ -1,6 +1,6 @@
 //! Durable jobs and scheduler state.
 //!
-//! Voodoo Store decides *what* is ready to execute and persists delivery,
+//! Grumo Store decides *what* is ready to execute and persists delivery,
 //! retries, deadlines, and history. It never executes application code.
 
 use thiserror::Error;
@@ -1009,7 +1009,7 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        std::env::temp_dir().join(format!("voodoo-store-job-{name}-{nonce}.vstore"))
+        std::env::temp_dir().join(format!("grumo-store-job-{name}-{nonce}.vstore"))
     }
 
     #[test]

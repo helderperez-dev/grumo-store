@@ -1,6 +1,6 @@
 use std::error::Error;
 
-use voodoo_store_core::{JobSpec, Store};
+use grumo_store_core::{JobSpec, Store};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let path = std::env::args()

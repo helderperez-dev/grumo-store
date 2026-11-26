@@ -1,4 +1,4 @@
-//! Versioned, checksummed header for every Voodoo Store file.
+//! Versioned, checksummed header for every Grumo Store file.
 //!
 //! The header is deliberately language-neutral and fixed-width. It identifies
 //! the file before log recovery starts and gives future engines a place to

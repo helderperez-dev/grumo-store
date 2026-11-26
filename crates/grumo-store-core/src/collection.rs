@@ -1,4 +1,4 @@
-//! Structured collections implemented on the Voodoo Store transactional KV.
+//! Structured collections implemented on the Grumo Store transactional KV.
 //!
 //! The core remains codec-agnostic: records, primary keys, and index values are
 //! bytes. Bindings/frameworks can layer JSON, MessagePack, CBOR, Protobuf, or a
@@ -634,7 +634,7 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        std::env::temp_dir().join(format!("voodoo-store-collection-{name}-{nonce}.vstore"))
+        std::env::temp_dir().join(format!("grumo-store-collection-{name}-{nonce}.vstore"))
     }
 
     fn unique_email() -> IndexDefinition {

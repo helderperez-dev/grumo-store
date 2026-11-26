@@ -1,6 +1,6 @@
-//! Core primitives and embedded engine for Voodoo Store.
+//! Core primitives and embedded engine for Grumo Store.
 //!
-//! `voodoo-store-core` is intentionally framework-agnostic. It contains no
+//! `grumo-store-core` is intentionally framework-agnostic. It contains no
 //! dependency on Voodoo Framework, Python, Node.js, or any foreign runtime.
 //! Language bindings must sit above this crate so the on-disk format and core
 //! semantics remain portable and independently usable.

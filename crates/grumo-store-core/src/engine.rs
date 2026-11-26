@@ -871,7 +871,7 @@ pub enum EngineError {
     NamespaceQuotaOverflow,
     #[error("key is too large")]
     KeyTooLarge,
-    #[error("keys beginning with the Voodoo Store internal namespace are reserved")]
+    #[error("keys beginning with the Grumo Store internal namespace are reserved")]
     ReservedKey,
     #[error("failed to obtain OS randomness for store identity: {0}")]
     Randomness(String),
@@ -904,7 +904,7 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        std::env::temp_dir().join(format!("voodoo-store-{name}-{nonce}.vstore"))
+        std::env::temp_dir().join(format!("grumo-store-{name}-{nonce}.vstore"))
     }
 
     #[test]

@@ -1,4 +1,4 @@
-//! Atomic single-store mutation primitives built on Voodoo Store transactions.
+//! Atomic single-store mutation primitives built on Grumo Store transactions.
 //!
 //! These operations rely on the Store's exclusive writer lock and `&mut Store`
 //! access. They do not introduce a new on-disk record kind: the resulting
@@ -88,7 +88,7 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        std::env::temp_dir().join(format!("voodoo-store-atomic-{name}-{nonce}.vstore"))
+        std::env::temp_dir().join(format!("grumo-store-atomic-{name}-{nonce}.vstore"))
     }
 
     #[test]

@@ -1,0 +1,30 @@
+"""Grumo Store namespace compatibility regression tests."""
+
+from __future__ import annotations
+
+import grumo_store
+import voodoo_store
+
+
+def test_grumo_namespace_exports_same_native_store_and_version() -> None:
+    assert grumo_store.Store is voodoo_store.Store
+    assert grumo_store.Transaction is voodoo_store.Transaction
+    assert grumo_store.VerificationReport is voodoo_store.VerificationReport
+    assert grumo_store.__version__ == voodoo_store.__version__
+    assert set(grumo_store.__all__) == set(voodoo_store.__all__)
+
+
+def test_grumo_namespace_reads_legacy_store(tmp_path) -> None:
+    path = tmp_path / "legacy.vstore"
+    with voodoo_store.Store.open(path) as store:
+        store.put(b"key", b"value")
+    with grumo_store.Store.open(path) as store:
+        assert store.get(b"key") == b"value"
+
+
+def test_grumo_namespace_uses_new_extension_without_format_change(tmp_path) -> None:
+    path = tmp_path / "application.grumo"
+    with grumo_store.Store.open(path) as store:
+        store.put(b"key", b"value")
+    with voodoo_store.Store.open(path) as store:
+        assert store.get(b"key") == b"value"

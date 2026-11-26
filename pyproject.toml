@@ -34,8 +34,6 @@ manifest-path = "crates/voodoo-store-python/Cargo.toml"
 python-source = "python"
 module-name = "grumo_store._native"
 bindings = "pyo3"
-# Package the transitional Grumo namespace alongside the legacy native
-# extension. Without this explicit list, mixed-project builds may include
-# only the package containing the extension module.
-python-packages = ["voodoo_store", "grumo_store"]
+# Package only the canonical Grumo namespace.
+python-packages = ["grumo_store"]
 include = [{ path = "LICENSE", format = "sdist" }]

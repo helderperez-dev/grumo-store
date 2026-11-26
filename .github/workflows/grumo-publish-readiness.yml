@@ -1,0 +1,54 @@
+name: Grumo Store — publication readiness
+
+# This is a PRE-PUBLICATION workflow. It intentionally does not upload to PyPI.
+# Enable an OIDC publishing job only after the actual grumo-store packaging
+# exists, package names have been verified, and CI is green.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  readiness:
+    name: Check new Grumo Store package identity
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assert repository and package cutover is complete
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+
+          expected_repo = "helderperez-dev/grumo-store"
+          if os.getenv("GITHUB_REPOSITORY") != expected_repo:
+              raise SystemExit(
+                  "Not ready: this workflow must run from " + expected_repo
+              )
+          with Path("pyproject.toml").open("rb") as fh:
+              package = tomllib.load(fh)
+          name = package["project"]["name"]
+          if name != "grumo-store":
+              raise SystemExit(
+                  f"Not ready: distribution is {name!r}, expected 'grumo-store'"
+              )
+          if not Path("python/grumo_store/__init__.py").is_file():
+              raise SystemExit("Not ready: grumo_store Python bindings are missing")
+          if package["tool"]["maturin"]["module-name"] != "grumo_store._native":
+              raise SystemExit("Not ready: maturin module-name must be grumo_store._native")
+          print("Grumo Store distribution identity is ready for release validation")
+          PY
+
+      - name: Next step — OIDC authorization
+        run: |
+          echo 'Do NOT publish using a copied API token.'
+          echo 'Configure PyPI Trusted Publishing for:'
+          echo '  owner: helderperez-dev'
+          echo '  repo: grumo-store'
+          echo '  workflow: publish-grumo-store.yml (final release workflow)'
+          echo '  environment: pypi'
+          echo 'Only after a full cross-platform release workflow is built and validated.'

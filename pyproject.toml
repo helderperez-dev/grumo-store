@@ -30,7 +30,7 @@ Repository = "https://github.com/helderperez-dev/grumo-store"
 Issues = "https://github.com/helderperez-dev/grumo-store/issues"
 
 [tool.maturin]
-manifest-path = "crates/voodoo-store-python/Cargo.toml"
+manifest-path = "crates/grumo-store-python/Cargo.toml"
 python-source = "python"
 module-name = "grumo_store._native"
 bindings = "pyo3"

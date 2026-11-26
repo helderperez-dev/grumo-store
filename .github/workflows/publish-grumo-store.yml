@@ -57,7 +57,7 @@ jobs:
               f"Release blocked: Cargo.lock contains vulnerable PyO3 {pyo3_versions}"
           )
           version = project["version"]
-          with Path("crates/voodoo-store-python/Cargo.toml").open("rb") as handle:
+          with Path("crates/grumo-store-python/Cargo.toml").open("rb") as handle:
               native_package = tomllib.load(handle)["package"]
           assert native_package["version"] == version, (
               f"Rust native module version {native_package['version']} "

@@ -61,3 +61,27 @@ def test_grumo_namespace_verifies_historical_store_fixture() -> None:
     assert new_report.keys == old_report.keys
     assert new_report.records == old_report.records
     assert not new_report.has_torn_tail
+
+
+def test_native_module_cutover_preserves_legacy_imports() -> None:
+    import grumo_store._native as new_native
+    import voodoo_store._native as legacy_native
+
+    assert new_native.Store is legacy_native.Store
+    assert new_native.Transaction is legacy_native.Transaction
+    assert new_native.VoodooStoreError is legacy_native.VoodooStoreError
+
+
+def test_both_import_orders_in_fresh_interpreters() -> None:
+    import subprocess
+    import sys
+
+    for order in ("voodoo_store,grumo_store", "grumo_store,voodoo_store"):
+        first, second = order.split(",")
+        code = (
+            f"import {first}; import {second}; "
+            "import voodoo_store, grumo_store; "
+            "assert grumo_store.Store is voodoo_store.Store; "
+            "assert grumo_store.create_backup_manifest is voodoo_store.create_backup_manifest"
+        )
+        subprocess.run([sys.executable, "-c", code], check=True)

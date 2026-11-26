@@ -26,7 +26,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--artifact-version",
-        help="require the installed voodoo-store distribution to match this version",
+        help="require the installed Grumo or Voodoo Store distribution to match this version",
     )
     parser.add_argument(
         "--validate-evidence",
@@ -35,15 +35,27 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    distribution = metadata.distribution("voodoo-store")
+    # Prefer the renamed package. Retain old-name support for operators
+    # running this drill against a legacy voodoo-store installation.
+    for distribution_name in ("grumo-store", "voodoo-store"):
+        try:
+            distribution = metadata.distribution(distribution_name)
+            break
+        except metadata.PackageNotFoundError:
+            continue
+    else:
+        raise SystemExit("no installed grumo-store or voodoo-store distribution found")
+
     installed_version = distribution.version
     record = distribution.read_text("RECORD")
     if record is None:
-        raise SystemExit("installed voodoo-store artifact has no RECORD metadata")
+        raise SystemExit(
+            f"installed {distribution_name} artifact has no RECORD metadata"
+        )
     artifact_record_sha256 = hashlib.sha256(record.encode("utf-8")).hexdigest()
     if args.artifact_version is not None and installed_version != args.artifact_version:
         raise SystemExit(
-            "installed voodoo-store artifact version does not match requested "
+            f"installed {distribution_name} artifact version does not match requested "
             f"{args.artifact_version}: {installed_version}"
         )
 

@@ -13,6 +13,9 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # One-time lockfile refresh, restricted to this repository's migration PR.
+  # The build-only GitHub token cannot trigger another workflow run; subsequent
+  # author commits still receive normal CI validation.
   verify-pyo3-lock:
     name: Verify patched PyO3 lockfile
     runs-on: ubuntu-24.04
@@ -122,12 +125,23 @@ jobs:
               "grumo_store/migrations.py",
               "grumo_store/objects.py",
               "voodoo_store/__init__.py",
+              "voodoo_store/_native.py",
               "voodoo_store/grumo_migration.py",
           }
           missing = required - members
           if missing:
               raise SystemExit(f"Wheel is missing compatibility modules: {sorted(missing)}")
-          print("Both Python namespaces are present in the wheel")
+          metadata_paths = [name for name in members if name.endswith(".dist-info/METADATA")]
+          if len(metadata_paths) != 1:
+              raise SystemExit(f"Expected one wheel METADATA, got {metadata_paths}")
+          with ZipFile(wheels[0]) as wheel:
+              metadata = wheel.read(metadata_paths[0]).decode("utf-8")
+          if "Name: grumo-store\n" not in metadata.replace("\r\n", "\n"):
+              raise SystemExit("Wheel distribution identity must be grumo-store")
+          extensions = [name for name in members if name.startswith("grumo_store/_native.")]
+          if len(extensions) != 1:
+              raise SystemExit(f"Expected exactly one Grumo native extension, found {extensions}")
+          print("Grumo native extension and both Python namespaces are present in the wheel")
           PY
       - name: Audit Python runtime dependencies
         shell: bash

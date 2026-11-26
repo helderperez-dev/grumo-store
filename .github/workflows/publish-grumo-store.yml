@@ -36,7 +36,25 @@ jobs:
           assert info["tool"]["maturin"]["module-name"] == "grumo_store._native"
           assert Path("python/grumo_store/__init__.py").exists()
           assert Path("tests/fixtures/legacy-0.2.2.vstore").is_file()
+          # Do not ship a distribution built from the vulnerable PyO3 0.28
+          # lockfile even if Cargo.toml has already been changed to 0.29.
+          with Path("Cargo.lock").open("rb") as handle:
+              locked = tomllib.load(handle)
+          pyo3_versions = [
+              tuple(int(part) for part in item["version"].split("."))
+              for item in locked["package"]
+              if item["name"] == "pyo3"
+          ]
+          assert len(pyo3_versions) == 1 and pyo3_versions[0] >= (0, 29, 0), (
+              f"Release blocked: Cargo.lock contains vulnerable PyO3 {pyo3_versions}"
+          )
           version = project["version"]
+          with Path("crates/voodoo-store-python/Cargo.toml").open("rb") as handle:
+              native_package = tomllib.load(handle)["package"]
+          assert native_package["version"] == version, (
+              f"Rust native module version {native_package['version']} "
+              f"does not match Python distribution {version}"
+          )
           assert os.environ["REF_NAME"] == f"grumo-store-v{version}", "Tag/version mismatch"
           with open(os.environ["GITHUB_OUTPUT"], "a") as handle:
               handle.write(f"version={version}\n")

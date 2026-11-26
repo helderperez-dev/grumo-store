@@ -1,9 +1,67 @@
-"""Transitional Grumo Store namespace for existing Voodoo Store installations.
+"""Python API for Grumo Store, with lazy compatibility helpers.
 
-This is an import compatibility layer, not the final renamed PyPI distribution.
-It deliberately delegates to the same native engine and on-disk format.
+The native extension is loaded directly. Importing voodoo_store here would
+create a cycle when an existing application imports voodoo_store first:
+voodoo_store -> its _native compatibility shim -> grumo_store.
 """
 
-from voodoo_store import *  # noqa: F401,F403
-from voodoo_store import __all__ as __all__
-from voodoo_store import __version__ as __version__
+from ._native import (
+    AlreadyOpenError,
+    CorruptionError,
+    DiskFullError,
+    NamespaceQuotaError,
+    IoError,
+    ReservedKeyError,
+    Store,
+    StoreBusyError,
+    StoreClosedError,
+    Transaction,
+    TransactionFinishedError,
+    VerificationReport,
+    VoodooStoreError,
+    __version__,
+)
+
+__all__ = [
+    "AlreadyOpenError",
+    "CorruptionError",
+    "DiskFullError",
+    "NamespaceQuotaError",
+    "IoError",
+    "ReservedKeyError",
+    "Store",
+    "StoreBusyError",
+    "StoreClosedError",
+    "Transaction",
+    "TransactionFinishedError",
+    "VerificationReport",
+    "VoodooStoreError",
+    "create_backup_manifest",
+    "verify_backup_manifest",
+    "MigrationConflict",
+    "MigrationError",
+    "MigrationReport",
+    "migrate_collection",
+    "iter_object_chunks",
+]
+
+_LAZY_HELPERS = {
+    "create_backup_manifest": "backup",
+    "verify_backup_manifest": "backup",
+    "MigrationConflict": "migrations",
+    "MigrationError": "migrations",
+    "MigrationReport": "migrations",
+    "migrate_collection": "migrations",
+    "iter_object_chunks": "objects",
+}
+
+
+def __getattr__(name: str):
+    """Load Python helpers only when requested, avoiding import cycles."""
+    if name not in _LAZY_HELPERS:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    from importlib import import_module
+
+    value = getattr(import_module(f".{_LAZY_HELPERS[name]}", __name__), name)
+    globals()[name] = value
+    return value

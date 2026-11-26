@@ -37,6 +37,20 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Guard legacy Voodoo Store release pipeline
+        run: |
+          python - <<'PY'
+          import tomllib
+          from pathlib import Path
+          with Path("pyproject.toml").open("rb") as fh:
+              name = tomllib.load(fh)["project"]["name"]
+          if name != "voodoo-store":
+              raise SystemExit(
+                  "Legacy release disabled after Grumo cutover; "
+                  "use publish-grumo-store.yml in the renamed repository"
+              )
+          PY
+
       - name: Calculate release version
         id: version
         env:

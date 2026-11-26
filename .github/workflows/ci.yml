@@ -13,6 +13,33 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  refresh-pyo3-lock:
+    name: Refresh PyO3 dependency lock on Grumo compatibility PR
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'chore/grumo-rebrand-foundation' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chore/grumo-rebrand-foundation
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Resolve patched PyO3 and validate Rust workspace
+        run: |
+          cargo update -p pyo3 --precise 0.29.0
+          cargo check --workspace --all-targets
+      - name: Commit validated lockfile
+        run: |
+          if git diff --quiet -- Cargo.lock; then
+            echo "Cargo.lock is already current"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Cargo.lock
+          git commit -m "chore(lockfile): use patched PyO3 0.29"
+          git push origin HEAD:chore/grumo-rebrand-foundation
+
   audit:
     name: RustSec dependency audit
     runs-on: ubuntu-latest

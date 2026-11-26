@@ -135,7 +135,7 @@ jobs:
               raise SystemExit(f"Expected one wheel METADATA, got {metadata_paths}")
           with ZipFile(wheels[0]) as wheel:
               metadata = wheel.read(metadata_paths[0]).decode("utf-8")
-          if "Name: grumo-store\\n" not in metadata.replace("\\r\\n", "\\n"):
+          if "Name: grumo-store\n" not in metadata.replace("\r\n", "\n"):
               raise SystemExit("Wheel distribution identity must be grumo-store")
           extensions = [name for name in members if name.startswith("grumo_store/_native.")]
           if len(extensions) != 1:

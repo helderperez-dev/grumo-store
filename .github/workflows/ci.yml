@@ -95,12 +95,16 @@ jobs:
               "grumo_store/migrations.py",
               "grumo_store/objects.py",
               "voodoo_store/__init__.py",
+              "voodoo_store/_native.py",
               "voodoo_store/grumo_migration.py",
           }
           missing = required - members
           if missing:
               raise SystemExit(f"Wheel is missing compatibility modules: {sorted(missing)}")
-          print("Both Python namespaces are present in the wheel")
+          extensions = [name for name in members if name.startswith("grumo_store/_native.")]
+          if len(extensions) != 1:
+              raise SystemExit(f"Expected exactly one Grumo native extension, found {extensions}")
+          print("Grumo native extension and both Python namespaces are present in the wheel")
           PY
       - name: Audit Python runtime dependencies
         shell: bash

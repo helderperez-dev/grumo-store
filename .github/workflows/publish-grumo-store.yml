@@ -1,0 +1,132 @@
+name: Publish Grumo Store (Trusted Publishing)
+
+# Armed only for the future renamed repository and a signed-off release tag.
+# PyPI project/publisher authorization must be configured outside GitHub.
+on:
+  push:
+    tags:
+      - "grumo-store-v*"
+
+permissions:
+  contents: read
+
+jobs:
+  identity:
+    name: Validate Grumo Store release identity
+    if: github.repository == 'helderperez-dev/grumo-store'
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.identity.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate package metadata and tag
+        id: identity
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          python - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+
+          with Path("pyproject.toml").open("rb") as handle:
+              info = tomllib.load(handle)
+          project = info["project"]
+          assert project["name"] == "grumo-store", "Distribution rename incomplete"
+          assert info["tool"]["maturin"]["module-name"] == "grumo_store._native"
+          assert Path("python/grumo_store/__init__.py").exists()
+          assert Path("tests/fixtures/legacy-0.2.2.vstore").is_file()
+          version = project["version"]
+          assert os.environ["REF_NAME"] == f"grumo-store-v{version}", "Tag/version mismatch"
+          with open(os.environ["GITHUB_OUTPUT"], "a") as handle:
+              handle.write(f"version={version}\n")
+          PY
+
+  wheels:
+    name: Build and test wheel (${{ matrix.name }})
+    needs: identity
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {name: linux-x86_64, os: ubuntu-24.04, target: x86_64, manylinux: auto}
+          - {name: linux-aarch64, os: ubuntu-24.04-arm, target: aarch64, manylinux: auto}
+          - {name: macos-arm64, os: macos-15, target: aarch64, manylinux: ""}
+          - {name: macos-x86_64, os: macos-15-intel, target: x86_64, manylinux: ""}
+          - {name: windows-x86_64, os: windows-2025, target: x64, manylinux: ""}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build wheel
+        uses: PyO3/maturin-action@v1
+        with:
+          target: ${{ matrix.target }}
+          args: --release --out dist
+          manylinux: ${{ matrix.manylinux }}
+      - name: Smoke-test exact wheel
+        # An aarch64 wheel cannot be imported into the standard x86_64 build
+        # container; test it on a native aarch64 runner when available.
+        if: matrix.name != 'linux-aarch64'
+        shell: bash
+        run: |
+          python -m pip install --force-reinstall dist/*.whl pytest
+          python -c "import grumo_store; assert grumo_store.__version__"
+          python -m pytest -q python/tests
+      - uses: actions/upload-artifact@v4
+        with:
+          name: grumo-store-wheel-${{ matrix.name }}
+          path: dist/*.whl
+          if-no-files-found: error
+
+  sdist:
+    name: Source distribution
+    needs: identity
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build and import-test sdist
+        run: |
+          python -m pip install "maturin>=1.9,<2"
+          maturin sdist --out dist
+          python -m venv /tmp/grumo-sdist-check
+          /tmp/grumo-sdist-check/bin/python -m pip install dist/*.tar.gz
+          /tmp/grumo-sdist-check/bin/python -c "import grumo_store"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: grumo-store-sdist
+          path: dist/*.tar.gz
+          if-no-files-found: error
+
+  publish:
+    name: Publish to PyPI via OIDC
+    needs: [identity, wheels, sdist]
+    runs-on: ubuntu-24.04
+    environment:
+      name: pypi
+      url: https://pypi.org/project/grumo-store/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: grumo-store-*
+          path: dist
+          merge-multiple: true
+      - name: Refuse unexpected distributions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          files = list(Path("dist").iterdir())
+          assert files, "No artifacts"
+          for file in files:
+              assert file.is_file(), file
+              assert file.name.startswith(("grumo_store-", "grumo-store-")), file
+          PY
+      - uses: pypa/gh-action-pypi-publish@release/v1

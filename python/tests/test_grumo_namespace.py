@@ -48,3 +48,16 @@ def test_grumo_helper_modules_delegate_to_legacy_implementations() -> None:
     assert new_backup is old_backup
     assert new_migrate is old_migrate
     assert new_chunks is old_chunks
+
+
+def test_grumo_namespace_verifies_historical_store_fixture() -> None:
+    from pathlib import Path
+
+    fixture = Path(__file__).resolve().parents[2] / "tests" / "fixtures" / "legacy-0.2.2.vstore"
+    assert fixture.is_file(), "Historical compatibility fixture must be shipped in CI"
+    old_report = voodoo_store.Store.verify(fixture)
+    new_report = grumo_store.Store.verify(fixture)
+    assert new_report.store_id == old_report.store_id
+    assert new_report.keys == old_report.keys
+    assert new_report.records == old_report.records
+    assert not new_report.has_torn_tail

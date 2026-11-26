@@ -735,14 +735,15 @@ fn map_io_error(error: std::io::Error) -> EngineError {
 }
 
 fn is_lock_contention(error: &std::io::Error) -> bool {
-    if error.kind() == std::io::ErrorKind::WouldBlock {
-        return true;
-    }
     #[cfg(windows)]
-    if matches!(error.raw_os_error(), Some(32 | 33)) {
-        return true;
+    {
+        error.kind() == std::io::ErrorKind::WouldBlock
+            || matches!(error.raw_os_error(), Some(32 | 33))
     }
-    false
+    #[cfg(not(windows))]
+    {
+        error.kind() == std::io::ErrorKind::WouldBlock
+    }
 }
 
 fn paths_refer_to_same_file(source: &Path, destination: &Path) -> Result<bool, EngineError> {

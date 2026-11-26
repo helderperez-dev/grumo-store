@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 import pytest
-from grumo_store import Store, VoodooStoreError, migrate_collection
+from grumo_store import Store, GrumoStoreError, migrate_collection
 
 
 def test_native_collection_crud_and_scan(tmp_path):
@@ -214,7 +214,7 @@ def test_native_collection_unique_index(tmp_path):
         indexes=[(b"email", b"ada@example.com")],
     )
 
-    with pytest.raises(VoodooStoreError):
+    with pytest.raises(GrumoStoreError):
         store.upsert_record(
             b"user",
             b"2",

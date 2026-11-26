@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from grumo_store import Store, VoodooStoreError
+from grumo_store import Store, GrumoStoreError
 
 
 def test_native_stream_append_read_and_reopen(tmp_path):
@@ -55,5 +55,5 @@ def test_topic_cursor_rejects_regression_without_explicit_reset(tmp_path):
         store.publish_topic(b"events", b"two")
         assert store.acknowledge_topic_through(b"events", b"consumer", 1) == 2
 
-        with pytest.raises(VoodooStoreError):
+        with pytest.raises(GrumoStoreError):
             store.acknowledge_topic_through(b"events", b"consumer", 0)

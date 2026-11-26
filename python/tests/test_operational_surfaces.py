@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from grumo_store import Store, VoodooStoreError
+from grumo_store import Store, GrumoStoreError
 
 
 def test_consumer_group_claim_nack_redelivery_and_stale_ack(tmp_path):
@@ -42,7 +42,7 @@ def test_consumer_group_claim_nack_redelivery_and_stale_ack(tmp_path):
         assert redelivered["payload"] == b"first"
         assert redelivered["lease_generation"] > first["lease_generation"]
 
-        with pytest.raises(VoodooStoreError):
+        with pytest.raises(GrumoStoreError):
             store.consumer_group_ack(
                 b"work",
                 b"workers",

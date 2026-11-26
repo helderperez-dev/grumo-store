@@ -10,7 +10,7 @@ resolver = "2"
 [workspace.package]
 edition = "2024"
 license = "Apache-2.0"
-repository = "https://github.com/helderperez-dev/voodoo-store"
+repository = "https://github.com/helderperez-dev/grumo-store"
 rust-version = "1.85"
 
 [workspace.dependencies]

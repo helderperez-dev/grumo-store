@@ -15,7 +15,7 @@ The machine-readable contract lives in
 must publish that contract with the binding so operators can select a compatible
 restore binary before touching a production file.
 
-The retained 0.2.2 release used format `1.0`, so 0.3.x can read its durable
+The retained 0.2.2 release used format `1.0`, so Grumo Store 1.x can read its durable
 files under the same-major policy. The compatibility contract test keeps this
 historical release metadata executable; future major changes require an
 explicit migration rather than an implicit restore.

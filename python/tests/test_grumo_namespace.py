@@ -35,3 +35,16 @@ def test_grumo_migration_cli_reuses_verified_implementation() -> None:
     from voodoo_store.grumo_migration import prepare_grumo_store as legacy_prepare
 
     assert grumo_prepare is legacy_prepare
+
+
+def test_grumo_helper_modules_delegate_to_legacy_implementations() -> None:
+    from grumo_store.backup import create_backup_manifest as new_backup
+    from grumo_store.migrations import migrate_collection as new_migrate
+    from grumo_store.objects import iter_object_chunks as new_chunks
+    from voodoo_store.backup import create_backup_manifest as old_backup
+    from voodoo_store.migrations import migrate_collection as old_migrate
+    from voodoo_store.objects import iter_object_chunks as old_chunks
+
+    assert new_backup is old_backup
+    assert new_migrate is old_migrate
+    assert new_chunks is old_chunks

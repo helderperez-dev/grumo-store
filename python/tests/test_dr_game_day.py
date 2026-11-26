@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 import pytest
-from voodoo_store import __version__
+from grumo_store import __version__
 
 
 def test_game_day_accepts_retained_release_fixture() -> None:

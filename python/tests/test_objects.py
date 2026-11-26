@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from voodoo_store import Store, iter_object_chunks
+from grumo_store import Store, iter_object_chunks
 
 
 def test_native_objects_are_content_addressed_and_durable(tmp_path):

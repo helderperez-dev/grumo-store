@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from voodoo_store import Store, VoodooStoreError
+from grumo_store import Store, VoodooStoreError
 
 
 def test_native_stream_append_read_and_reopen(tmp_path):

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from voodoo_store import (
+from grumo_store import (
     ReservedKeyError,
     Store,
     StoreBusyError,

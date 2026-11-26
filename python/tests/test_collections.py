@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 import pytest
-from voodoo_store import Store, VoodooStoreError, migrate_collection
+from grumo_store import Store, VoodooStoreError, migrate_collection
 
 
 def test_native_collection_crud_and_scan(tmp_path):

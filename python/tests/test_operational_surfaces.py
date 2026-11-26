@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from voodoo_store import Store, VoodooStoreError
+from grumo_store import Store, VoodooStoreError
 
 
 def test_consumer_group_claim_nack_redelivery_and_stale_ack(tmp_path):

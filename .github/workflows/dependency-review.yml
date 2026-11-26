@@ -1,4 +1,4 @@
-name: Dependency review
+name: Dependency security review
 
 on:
   pull_request:
@@ -6,16 +6,32 @@ on:
 permissions:
   contents: read
 
-
-# A new commit supersedes queued/running CI for the same pull request.
-# Keep unrelated branches and the default-branch pipeline independent.
+# GitHub's dependency-review-action requires Dependency Graph, which is
+# disabled for this repository. Run an independent, fail-closed dependency
+# vulnerability scan until it is enabled. This audits resolved packages;
+# it does NOT claim to provide GitHub's dependency-diff review semantics.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  dependency-review:
-    runs-on: ubuntu-latest
+  dependency-security-review:
+    name: Audit Rust and Python package dependencies
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/dependency-review-action@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Audit locked Rust dependencies
+        run: |
+          cargo install cargo-audit --locked
+          cargo audit --file Cargo.lock
+      - name: Audit Python runtime dependencies
+        run: |
+          python -m pip install "pip-audit==2.10.1"
+          python -m pip_audit . --progress-spinner off
+      - name: Explain coverage
+        run: |
+          echo "::notice::Standalone vulnerability audit passed. Dependency-diff review requires enabling GitHub Dependency Graph."

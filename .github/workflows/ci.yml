@@ -124,9 +124,6 @@ jobs:
               "grumo_store/backup.py",
               "grumo_store/migrations.py",
               "grumo_store/objects.py",
-              "voodoo_store/__init__.py",
-              "voodoo_store/_native.py",
-              "voodoo_store/grumo_migration.py",
           }
           missing = required - members
           if missing:
@@ -157,7 +154,7 @@ jobs:
           python -m pip_audit . --progress-spinner off
       - name: Verify both installed Python namespaces
         run: |
-          python -c "import grumo_store, voodoo_store; assert grumo_store.Store is voodoo_store.Store"
+          python -c "import grumo_store, importlib.util; assert importlib.util.find_spec('voodoo_store') is None; assert grumo_store.__version__"
           python -m grumo_store.grumo_migration --help
       - name: Test Python package
         run: python -m pytest python/tests -q

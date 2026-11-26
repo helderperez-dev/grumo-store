@@ -9,7 +9,7 @@ import tempfile
 from importlib import metadata
 from pathlib import Path
 
-from voodoo_store import (
+from grumo_store import (
     CorruptionError,
     Store,
     create_backup_manifest,

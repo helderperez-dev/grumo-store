@@ -23,7 +23,7 @@ def main() -> int:
 
     signal_paths = set(contract["signals"].values())
     metric_names = {
-        "voodoo_store_health_details_native_health_" + path.replace(".", "_")
+        "grumo_store_health_details_native_health_" + path.replace(".", "_")
         for path in signal_paths
     }
     panels = dashboard.get("panels")

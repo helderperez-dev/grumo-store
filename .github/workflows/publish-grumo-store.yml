@@ -165,7 +165,6 @@ jobs:
               "grumo_store/backup.py",
               "grumo_store/migrations.py",
               "grumo_store/objects.py",
-              "voodoo_store/__init__.py",
           }
           for file in files:
               assert file.is_file(), file

@@ -286,14 +286,14 @@ checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
 
 [[package]]
 name = "grumo-store-cli"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "grumo-store-core",
 ]
 
 [[package]]
 name = "grumo-store-core"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "crc32fast",
  "fs2",
@@ -304,14 +304,14 @@ dependencies = [
 
 [[package]]
 name = "grumo-store-ffi"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "grumo-store-core",
 ]
 
 [[package]]
 name = "grumo-store-python"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "pyo3",
  "grumo-store-core",

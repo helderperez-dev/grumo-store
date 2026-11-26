@@ -32,6 +32,35 @@ def test_format_compatibility_contract_matches_current_store(tmp_path: Path) -> 
     assert historical["0.2.2"]["format_minor"] == contract["current_format_minor"]
 
 
+
+def test_grumo_filename_preserves_legacy_store_format_and_identity(tmp_path: Path) -> None:
+    """Rebranding the path must not silently change the durable file format."""
+    old_path = tmp_path / ".voodoo" / "application.vstore"
+    old_path.parent.mkdir()
+    with Store.open(old_path) as store:
+        store.put(b"example", b"preserved")
+        original_id = store.health_report()["store_id"]
+        original_format = (
+            store.health_report()["format_major"],
+            store.health_report()["format_minor"],
+        )
+
+    new_path = tmp_path / ".grumo" / "application.grumo"
+    new_path.parent.mkdir()
+    # The compatibility contract uses the verified create-only restore path,
+    # never an in-place overwrite of the source.
+    Store.restore_copy(old_path, new_path)
+    assert old_path.is_file()
+    assert Store.verify(new_path).store_id == original_id
+    with Store.open(new_path) as store:
+        assert store.get(b"example") == b"preserved"
+        assert store.health_report()["store_id"] == original_id
+        assert (
+            store.health_report()["format_major"],
+            store.health_report()["format_minor"],
+        ) == original_format
+
+
 def test_storage_stats_and_health_report(tmp_path: Path) -> None:
     path = tmp_path / "operations.vstore"
 

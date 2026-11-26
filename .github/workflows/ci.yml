@@ -5,13 +5,42 @@ on:
     branches: [main]
   pull_request:
 
+
+# A new commit supersedes queued/running CI for the same pull request.
+# Keep unrelated branches and the default-branch pipeline independent.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  verify-pyo3-lock:
+    name: Verify patched PyO3 lockfile
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check locked PyO3 version and manifest compatibility
+        run: |
+          python - <<'PY'
+          import tomllib
+          from pathlib import Path
+
+          with Path("Cargo.lock").open("rb") as source:
+              packages = tomllib.load(source)["package"]
+          versions = [p["version"] for p in packages if p["name"] == "pyo3"]
+          assert len(versions) == 1, f"Expected one PyO3 version, got {versions}"
+          version = tuple(int(part) for part in versions[0].split("."))
+          assert version >= (0, 29, 0), f"Vulnerable PyO3 locked: {versions[0]}"
+          print(f"Verified PyO3 {versions[0]} in Cargo.lock")
+          PY
+
   audit:
     name: RustSec dependency audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: rustsec/audit-check@v2.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   quality:
     runs-on: ubuntu-latest
@@ -57,7 +86,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # Fixed Ubuntu runner for Python 3.9: ubuntu-latest now resolves
+        # to 26.04, which no longer supplies a hosted Python 3.9 binary.
+        os: [ubuntu-24.04, macos-latest, windows-latest]
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
     runs-on: ${{ matrix.os }}
     steps:
@@ -70,10 +101,50 @@ jobs:
           cache: pip
       - name: Build and install Python package
         run: python -m pip install . pytest
-      - name: Audit Python dependencies
+      - name: Verify built wheel includes Grumo compatibility namespace
+        shell: bash
         run: |
-          python -m pip install "pip-audit==2.10.1"
-          python -m pip_audit --progress-spinner off
+          python -m pip install "maturin>=1.9,<2"
+          python -m maturin build --out dist
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          wheels = list(Path("dist").glob("*.whl"))
+          if len(wheels) != 1:
+              raise SystemExit(f"Expected one wheel, found {len(wheels)}")
+          with ZipFile(wheels[0]) as wheel:
+              members = set(wheel.namelist())
+          required = {
+              "grumo_store/__init__.py",
+              "grumo_store/grumo_migration.py",
+              "grumo_store/backup.py",
+              "grumo_store/migrations.py",
+              "grumo_store/objects.py",
+              "voodoo_store/__init__.py",
+              "voodoo_store/grumo_migration.py",
+          }
+          missing = required - members
+          if missing:
+              raise SystemExit(f"Wheel is missing compatibility modules: {sorted(missing)}")
+          print("Both Python namespaces are present in the wheel")
+          PY
+      - name: Audit Python runtime dependencies
+        shell: bash
+        run: |
+          # The project's runtime dependency graph is audited, not the
+          # ephemeral runner's build tools (which may contain vulnerable
+          # setuptools versions unrelated to the published wheel).
+          if python -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)'; then
+            python -m pip install "pip-audit==2.10.1"
+          else
+            python -m pip install "pip-audit==2.9.0"
+          fi
+          python -m pip_audit . --progress-spinner off
+      - name: Verify both installed Python namespaces
+        run: |
+          python -c "import grumo_store, voodoo_store; assert grumo_store.Store is voodoo_store.Store"
+          python -m grumo_store.grumo_migration --help
       - name: Test Python package
         run: python -m pytest python/tests -q
 

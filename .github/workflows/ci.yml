@@ -86,6 +86,10 @@ jobs:
             python -m pip install "pip-audit==2.9.0"
           fi
           python -m pip_audit . --progress-spinner off
+      - name: Verify both installed Python namespaces
+        run: |
+          python -c "import grumo_store, voodoo_store; assert grumo_store.Store is voodoo_store.Store"
+          python -m grumo_store.grumo_migration --help
       - name: Test Python package
         run: python -m pytest python/tests -q
 

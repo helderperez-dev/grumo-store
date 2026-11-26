@@ -248,6 +248,8 @@ Dangerous repair operations must be visually separated from normal administratio
 
 ### Observability
 
+Studio must consume native health and inspection APIs directly. Monitoring, alert evaluation and bounded metric history are planned native capabilities, with no external collector or dashboard dependency. A live Store must be inspected through its owning process rather than opening a second writer.
+
 Studio should eventually unify operational debugging across the Store:
 
 - transactions;

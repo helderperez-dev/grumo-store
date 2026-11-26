@@ -7,8 +7,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).parents[1]
 CONTRACT = ROOT / "docs/OBSERVABILITY_CONTRACT.json"
-PYTHON_BINDING = ROOT / "crates/voodoo-store-python/src/operations.rs"
-CLI = ROOT / "crates/voodoo-store-cli/src/main.rs"
+PYTHON_BINDING = ROOT / "crates/grumo-store-python/src/operations.rs"
+CLI = ROOT / "crates/grumo-store-cli/src/main.rs"
 
 
 def main() -> int:

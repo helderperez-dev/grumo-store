@@ -55,14 +55,6 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - name: Validate observability contract
         run: python scripts/check_observability_contract.py
-      - name: Validate observability dashboard
-        run: python scripts/check_observability_dashboard.py
-      - name: Upload validated Grafana dashboard
-        uses: actions/upload-artifact@v4
-        with:
-          name: grumo-store-grafana-dashboard
-          path: docs/OBSERVABILITY_GRAFANA_DASHBOARD.json
-          if-no-files-found: error
       - name: Format
         run: cargo fmt --all -- --check
       - name: C ABI consumer smoke
@@ -104,7 +96,7 @@ jobs:
           cache: pip
       - name: Build and install Python package
         run: python -m pip install . pytest
-      - name: Verify built wheel includes Grumo compatibility namespace
+      - name: Verify built wheel includes canonical Grumo namespace
         shell: bash
         run: |
           python -m pip install "maturin>=1.9,<2"
@@ -138,7 +130,7 @@ jobs:
           extensions = [name for name in members if name.startswith("grumo_store/_native.")]
           if len(extensions) != 1:
               raise SystemExit(f"Expected exactly one Grumo native extension, found {extensions}")
-          print("Grumo native extension and both Python namespaces are present in the wheel")
+          print("Grumo native extension and canonical Python namespace are present in the wheel")
           PY
       - name: Audit Python runtime dependencies
         shell: bash
@@ -152,7 +144,7 @@ jobs:
             python -m pip install "pip-audit==2.9.0"
           fi
           python -m pip_audit . --progress-spinner off
-      - name: Verify both installed Python namespaces
+      - name: Verify canonical installed Python namespace
         run: |
           python -c "import grumo_store, importlib.util; assert importlib.util.find_spec('voodoo_store') is None; assert grumo_store.__version__"
           python -m grumo_store.grumo_migration --help

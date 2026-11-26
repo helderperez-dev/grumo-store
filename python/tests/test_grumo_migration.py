@@ -20,7 +20,7 @@ def test_grumo_migration_keeps_original_and_verifies_rollback(tmp_path: Path) ->
     report = prepare_grumo_store(source, destination, backup=backup)
 
     assert report["activated"] is False
-    assert report["store_id"] == original_id
+    assert report["store_id"] == original_id.hex()
     assert source.read_bytes() == old_bytes
     assert backup.read_bytes() == old_bytes
     assert destination.read_bytes() == old_bytes
@@ -72,4 +72,4 @@ def test_grumo_migration_rejects_wrong_extension(tmp_path: Path) -> None:
     with Store.open(old) as store:
         store.put(b"keep", b"intact")
     with pytest.raises(ValueError, match="end in .grumo"):
-        prepare_grumo_store(old, tmp_path / "application.vstore", backup=tmp_path / "backup.vstore")
+        prepare_grumo_store(old, tmp_path / "different.vstore", backup=tmp_path / "backup.vstore")

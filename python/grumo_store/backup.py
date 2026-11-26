@@ -1,4 +1,4 @@
-"""Operational backup manifest helpers for Voodoo Store."""
+"""Operational backup manifest helpers for Grumo Store."""
 
 from __future__ import annotations
 

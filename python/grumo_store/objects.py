@@ -1,4 +1,4 @@
-"""Bounded object transfer helpers for the Voodoo Store binding."""
+"""Bounded object transfer helpers for the Grumo Store binding."""
 
 from __future__ import annotations
 

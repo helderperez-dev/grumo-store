@@ -21,7 +21,7 @@ def _benchmark_module():
 
 def main() -> int:
     module = _benchmark_module()
-    with tempfile.TemporaryDirectory(prefix="voodoo-store-history-") as directory:
+    with tempfile.TemporaryDirectory(prefix="grumo-store-history-") as directory:
         history = Path(directory) / "history.jsonl"
         for elapsed in (100.0, 110.0, 90.0):
             module.append_history(history, {"elapsed_ms": elapsed, "iterations": 1000})

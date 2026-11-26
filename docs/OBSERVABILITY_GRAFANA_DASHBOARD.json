@@ -1,13 +1,13 @@
 {
   "datasource": {
     "type": "prometheus",
-    "uid": "voodoo-prometheus"
+    "uid": "grumo-prometheus"
   },
   "panels": [
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "voodoo-prometheus"
+        "uid": "grumo-prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -24,18 +24,18 @@
       "id": 1,
       "targets": [
         {
-          "expr": "voodoo_store_health_details_native_health_storage_file_bytes",
-          "legendFormat": "voodoo_store_health_details_native_health_storage_file_bytes",
+          "expr": "grumo_store_health_details_native_health_storage_file_bytes",
+          "legendFormat": "grumo_store_health_details_native_health_storage_file_bytes",
           "refId": "A"
         },
         {
-          "expr": "voodoo_store_health_details_native_health_storage_live_bytes",
-          "legendFormat": "voodoo_store_health_details_native_health_storage_live_bytes",
+          "expr": "grumo_store_health_details_native_health_storage_live_bytes",
+          "legendFormat": "grumo_store_health_details_native_health_storage_live_bytes",
           "refId": "B"
         },
         {
-          "expr": "voodoo_store_health_details_native_health_compaction_backlog_bytes",
-          "legendFormat": "voodoo_store_health_details_native_health_compaction_backlog_bytes",
+          "expr": "grumo_store_health_details_native_health_compaction_backlog_bytes",
+          "legendFormat": "grumo_store_health_details_native_health_compaction_backlog_bytes",
           "refId": "C"
         }
       ],
@@ -45,7 +45,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "voodoo-prometheus"
+        "uid": "grumo-prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -62,33 +62,33 @@
       "id": 2,
       "targets": [
         {
-          "expr": "voodoo_store_health_details_native_health_queue_ready",
-          "legendFormat": "voodoo_store_health_details_native_health_queue_ready",
+          "expr": "grumo_store_health_details_native_health_queue_ready",
+          "legendFormat": "grumo_store_health_details_native_health_queue_ready",
           "refId": "A"
         },
         {
-          "expr": "voodoo_store_health_details_native_health_queue_leased",
-          "legendFormat": "voodoo_store_health_details_native_health_queue_leased",
+          "expr": "grumo_store_health_details_native_health_queue_leased",
+          "legendFormat": "grumo_store_health_details_native_health_queue_leased",
           "refId": "B"
         },
         {
-          "expr": "voodoo_store_health_details_native_health_queue_dead",
-          "legendFormat": "voodoo_store_health_details_native_health_queue_dead",
+          "expr": "grumo_store_health_details_native_health_queue_dead",
+          "legendFormat": "grumo_store_health_details_native_health_queue_dead",
           "refId": "C"
         },
         {
-          "expr": "voodoo_store_health_details_native_health_queue_total",
-          "legendFormat": "voodoo_store_health_details_native_health_queue_total",
+          "expr": "grumo_store_health_details_native_health_queue_total",
+          "legendFormat": "grumo_store_health_details_native_health_queue_total",
           "refId": "D"
         },
         {
-          "expr": "voodoo_store_health_details_native_health_queue_oldest_ready_at_ms",
-          "legendFormat": "voodoo_store_health_details_native_health_queue_oldest_ready_at_ms",
+          "expr": "grumo_store_health_details_native_health_queue_oldest_ready_at_ms",
+          "legendFormat": "grumo_store_health_details_native_health_queue_oldest_ready_at_ms",
           "refId": "E"
         },
         {
-          "expr": "voodoo_store_health_details_native_health_queue_ready_lag_ms",
-          "legendFormat": "voodoo_store_health_details_native_health_queue_ready_lag_ms",
+          "expr": "grumo_store_health_details_native_health_queue_ready_lag_ms",
+          "legendFormat": "grumo_store_health_details_native_health_queue_ready_lag_ms",
           "refId": "F"
         }
       ],
@@ -98,7 +98,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "voodoo-prometheus"
+        "uid": "grumo-prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -115,23 +115,23 @@
       "id": 3,
       "targets": [
         {
-          "expr": "voodoo_store_health_details_native_health_metrics_commits",
-          "legendFormat": "voodoo_store_health_details_native_health_metrics_commits",
+          "expr": "grumo_store_health_details_native_health_metrics_commits",
+          "legendFormat": "grumo_store_health_details_native_health_metrics_commits",
           "refId": "A"
         },
         {
-          "expr": "voodoo_store_health_details_native_health_metrics_commit_errors",
-          "legendFormat": "voodoo_store_health_details_native_health_metrics_commit_errors",
+          "expr": "grumo_store_health_details_native_health_metrics_commit_errors",
+          "legendFormat": "grumo_store_health_details_native_health_metrics_commit_errors",
           "refId": "B"
         },
         {
-          "expr": "voodoo_store_health_details_native_health_metrics_commit_latency_max_us",
-          "legendFormat": "voodoo_store_health_details_native_health_metrics_commit_latency_max_us",
+          "expr": "grumo_store_health_details_native_health_metrics_commit_latency_max_us",
+          "legendFormat": "grumo_store_health_details_native_health_metrics_commit_latency_max_us",
           "refId": "C"
         },
         {
-          "expr": "voodoo_store_health_details_native_health_metrics_fsync_latency_max_us",
-          "legendFormat": "voodoo_store_health_details_native_health_metrics_fsync_latency_max_us",
+          "expr": "grumo_store_health_details_native_health_metrics_fsync_latency_max_us",
+          "legendFormat": "grumo_store_health_details_native_health_metrics_fsync_latency_max_us",
           "refId": "D"
         }
       ],
@@ -141,7 +141,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "voodoo-prometheus"
+        "uid": "grumo-prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -158,18 +158,18 @@
       "id": 4,
       "targets": [
         {
-          "expr": "voodoo_store_health_details_native_health_metrics_recovery_records",
-          "legendFormat": "voodoo_store_health_details_native_health_metrics_recovery_records",
+          "expr": "grumo_store_health_details_native_health_metrics_recovery_records",
+          "legendFormat": "grumo_store_health_details_native_health_metrics_recovery_records",
           "refId": "A"
         },
         {
-          "expr": "voodoo_store_health_details_native_health_metrics_object_bytes_written",
-          "legendFormat": "voodoo_store_health_details_native_health_metrics_object_bytes_written",
+          "expr": "grumo_store_health_details_native_health_metrics_object_bytes_written",
+          "legendFormat": "grumo_store_health_details_native_health_metrics_object_bytes_written",
           "refId": "B"
         },
         {
-          "expr": "voodoo_store_health_details_native_health_lock_contentions_total",
-          "legendFormat": "voodoo_store_health_details_native_health_lock_contentions_total",
+          "expr": "grumo_store_health_details_native_health_lock_contentions_total",
+          "legendFormat": "grumo_store_health_details_native_health_lock_contentions_total",
           "refId": "C"
         }
       ],
@@ -180,10 +180,10 @@
   "refresh": "15s",
   "schemaVersion": 39,
   "timezone": "utc",
-  "title": "Voodoo Store operations",
-  "uid": "voodoo-store-operations",
+  "title": "Grumo Store operations",
+  "uid": "grumo-store-operations",
   "version": 1,
-  "voodooContract": {
+  "grumoContract": {
     "alerts": [
       {
         "condition": "greater-than",

@@ -30,7 +30,7 @@ def build_dashboard(contract: dict[str, object], portable: dict[str, object]) ->
             }
         )
     return {
-        "uid": "voodoo-store-operations",
+        "uid": "grumo-store-operations",
         "title": portable["title"],
         "schemaVersion": 39,
         "version": 1,
@@ -38,7 +38,7 @@ def build_dashboard(contract: dict[str, object], portable: dict[str, object]) ->
         "timezone": "utc",
         "datasource": {"type": "prometheus", "uid": portable["datasource"]},
         "panels": panels,
-        "voodooContract": {
+        "grumoContract": {
             "schema_version": contract["schema_version"],
             "alerts": contract["alerts"],
         },

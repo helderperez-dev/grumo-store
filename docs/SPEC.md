@@ -1,12 +1,12 @@
-# Voodoo Store Specification v0.1-draft
+# Grumo Store Specification v0.1-draft
 
 ## 1. Scope
 
-This document defines the first durable layer of Voodoo Store and the compatibility rules that future capabilities must preserve.
+This document defines the first durable layer of Grumo Store and the compatibility rules that future capabilities must preserve.
 
 Version 0.1 focuses on an append-only log, record integrity, transaction identity, commit markers, deterministic recovery semantics, and language-neutral core types. Collections, indexes, queues, schedules, messaging, objects, streams, workflows, replication, and query execution build on this layer.
 
-Voodoo Store is an independent embedded application-state engine. Voodoo Framework is a first-class consumer, not a dependency of the storage engine.
+Grumo Store is an independent embedded application-state engine. Grumo Framework is a first-class consumer, not a dependency of the storage engine.
 
 ## 2. Principles
 
@@ -84,7 +84,7 @@ COMMIT
 
 If the transaction commits, every supported durable effect becomes visible according to its primitive semantics. If it does not commit, none become externally visible.
 
-This is a core architectural requirement, not a Voodoo Framework-specific feature.
+This is a core architectural requirement, not a Grumo Framework-specific feature.
 
 ## 6. Ordering
 
@@ -214,11 +214,11 @@ Durable records and envelopes may carry opaque identifiers required by higher-le
 - parent execution ID
 - source/node ID
 
-The Store transports and persists these identifiers without assigning Voodoo-specific business meaning to them.
+The Store transports and persists these identifiers without assigning Grumo-specific business meaning to them.
 
-## 14. Voodoo alignment contract
+## 14. Grumo alignment contract
 
-Voodoo may map framework/runtime concepts onto Store primitives:
+Grumo may map framework/runtime concepts onto Store primitives:
 
 ```text
 Model              -> Collection / Query
@@ -231,7 +231,7 @@ Cache              -> KV + TTL
 Telemetry          -> trace/correlation metadata
 ```
 
-This mapping is adapter-level behavior. `voodoo-store-core` must not import Voodoo Framework or encode Voodoo decorators/classes into mandatory durable format.
+This mapping is adapter-level behavior. `grumo-store-core` must not import Grumo Framework or encode Grumo decorators/classes into mandatory durable format.
 
 ## 15. Security and operational requirements
 
@@ -263,7 +263,7 @@ Planned design areas include:
 - conflict resolution
 - distributed leases
 - leader election
-- Voodoo Protocol integration
+- Grumo Protocol integration
 
 Generic global multi-writer consensus is not a prerequisite for the local engine and remains explicitly deferred.
 

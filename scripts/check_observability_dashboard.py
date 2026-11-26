@@ -16,7 +16,7 @@ def main() -> int:
     dashboard = json.loads(DASHBOARD.read_text(encoding="utf-8"))
     if dashboard.get("schema_version") != 1:
         raise SystemExit("unsupported observability dashboard schema")
-    if dashboard.get("endpoint") != "/voodoo/metrics/prometheus":
+    if dashboard.get("endpoint") != "/grumo/metrics/prometheus":
         raise SystemExit("dashboard must use the public Prometheus endpoint")
     if not isinstance(dashboard.get("refresh_seconds"), int) or dashboard["refresh_seconds"] < 5:
         raise SystemExit("dashboard refresh must be an integer of at least five seconds")
@@ -47,7 +47,7 @@ def main() -> int:
         if not isinstance(alert.get("for_seconds"), int) or alert["for_seconds"] <= 0:
             raise SystemExit(f"dashboard alert must have a positive duration: {alert.get('id')}")
     grafana = json.loads(GRAFANA.read_text(encoding="utf-8"))
-    if grafana.get("uid") != "voodoo-store-operations" or grafana.get("schemaVersion") != 39:
+    if grafana.get("uid") != "grumo-store-operations" or grafana.get("schemaVersion") != 39:
         raise SystemExit("Grafana dashboard identity/schema is invalid")
     if grafana.get("refresh") != f"{dashboard['refresh_seconds']}s":
         raise SystemExit("Grafana dashboard refresh does not match the portable contract")
@@ -58,7 +58,7 @@ def main() -> int:
     }
     if grafana_queries != queries:
         raise SystemExit("Grafana dashboard queries must match the portable dashboard exactly")
-    if grafana.get("voodooContract", {}).get("alerts") != contract.get("alerts"):
+    if grafana.get("grumoContract", {}).get("alerts") != contract.get("alerts"):
         raise SystemExit("Grafana dashboard alerts must match the observability contract")
     print(
         f"observability dashboard passed ({len(queries)} metrics, "

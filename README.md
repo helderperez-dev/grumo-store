@@ -4,17 +4,17 @@
 
 Grumo Store is a **standalone, 100% Rust embedded application-state engine** built around one goal:
 
-> **A Voodoo application should be able to run robustly with Voodoo + Grumo Store and no mandatory external infrastructure by default.**
+> **A Grumo application should be able to run robustly with Grumo + Grumo Store and no mandatory external infrastructure by default.**
 
-It is being built for the Voodoo ecosystem, but the core is not coupled to Voodoo Framework. The engine and `.vstore` format are designed to remain language-neutral and independently usable.
+It is being built for the Grumo ecosystem, but the core is not coupled to Grumo Framework. The engine and `.vstore` format are designed to remain language-neutral and independently usable.
 
 **SQLite made the database a file. Grumo Store aims to make application infrastructure a store.**
 
 ## Status
 
-**Current Python binding line: v0.3.0. Core and bindings remain pre-1.0.**
+**Release line: 2.0 (in development); latest published release: 1.0.0.**
 
-Grumo Store is pre-1.0, but the Rust core and the published Python binding are already suitable for controlled single-node development and production experiments where the current compatibility and operational limits are understood. The **0.3 Native Surface Convergence** milestone is closed: the published binding exposes the supported native primitives directly to Python and Voodoo without depending on internal KV encodings.
+Grumo Store provides native primitives for controlled single-node deployments. The 2.0 release removes transitional naming and APIs while retaining the independently versioned storage format.
 
 The current engine includes:
 
@@ -39,7 +39,21 @@ The current engine includes:
 - deterministic corruption, torn-write and process-crash testing;
 - CI across Format, Clippy, Linux, macOS, Windows and Rust 1.85 MSRV.
 
-This is **not yet a production 1.0**. File/API compatibility should still be considered pre-1.0, and important data should be backed up before upgrading experimental deployments.
+Version numbers do not imply production certification. Review the operational limits and verify backups before upgrades.
+
+## Install the Python binding
+
+```bash
+pip install grumo-store
+```
+
+```python
+from grumo_store import Store
+
+with Store.open("application.grumo") as store:
+    store.put(b"hello", b"world")
+    assert store.get(b"hello") == b"world"
+```
 
 ## Start here
 
@@ -53,7 +67,7 @@ cargo test --workspace
 Run the executable application-state example:
 
 ```bash
-cargo run -p grumo-store-core --example application_state -- application.vstore
+cargo run -p grumo-store-core --example application_state -- application.grumo
 ```
 
 The example commits application state, a durable Job and an Outbox Event through one transaction:
@@ -73,14 +87,14 @@ See `docs/VERSIONING.md` for package, format, and Python binding compatibility.
 
 ## North Star
 
-The standard Voodoo deployment is intentionally small:
+The standard Grumo deployment is intentionally small:
 
 ```text
 Application
     |
-    +-- Voodoo Runtime
+    +-- Grumo Runtime
     |
-    `-- application.vstore
+    `-- application.grumo
 ```
 
 A normal application should not need Redis, PostgreSQL, RabbitMQ, Kafka, Celery, a separate cron service, or a separate local object service merely to get robust application infrastructure.
@@ -92,7 +106,7 @@ External infrastructure remains available as optional adapters when scale or dep
 ```text
 Applications / Frameworks
         |
-        +-- Voodoo Runtime / Framework
+        +-- Grumo Runtime / Framework
         +-- Rust
         +-- C / native bindings
         +-- Python binding
@@ -120,7 +134,7 @@ Versioned .vstore Header
 Filesystem + File Locking
 ```
 
-The Store persists durable semantics. Voodoo Runtime executes application code, HTTP handlers, AI inference, external calls and Identity/Auth behavior.
+The Store persists durable semantics. Grumo Runtime executes application code, HTTP handlers, AI inference, external calls and Identity/Auth behavior.
 
 ## Cross-domain transactions
 
@@ -132,7 +146,7 @@ Current typed transaction primitives already allow application state, Jobs, Outb
 use grumo_store_core::{JobSpec, Store};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let mut store = Store::open("application.vstore")?;
+    let mut store = Store::open("application.grumo")?;
 
     let mut tx = store.begin()?;
     tx.put(b"order:42:status", b"paid")?;
@@ -145,7 +159,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-The public cross-domain transaction surface will continue expanding to additional primitives before 1.0.
+The public cross-domain transaction surface will continue expanding to additional primitives in future releases.
 
 ## Durability
 
@@ -153,7 +167,7 @@ The public cross-domain transaction surface will continue expanding to additiona
 use grumo_store_core::{Durability, Store, StoreOptions};
 
 let store = Store::open_with_options(
-    "application.vstore",
+    "application.grumo",
     StoreOptions {
         durability: Durability::Strict,
         repair_torn_tail: true,
@@ -175,42 +189,42 @@ previously valid durable prefix.
 
 ## Current good-fit workloads
 
-The current pre-1.0 line is a reasonable target for controlled use in:
+The current release line is a reasonable target for controlled use in:
 
-- Voodoo Runtime development;
+- Grumo Runtime development;
 - SaaS/internal-tool prototypes and early deployments;
 - desktop/local-first applications;
 - AI agent and automation state;
 - edge gateways and robotics controllers;
 - single-node APIs that want durable Jobs/Queues without deploying an infrastructure stack.
 
-Pin the exact Store version and keep backups for important pre-1.0 stores.
+Pin the exact Store version and keep backups for important stores.
 
 Python operators can create a verified JSON sidecar alongside a backup:
 
 ```python
 from grumo_store import create_backup_manifest, verify_backup_manifest
 
-manifest = create_backup_manifest(store, "application.backup.vstore")
-verify_backup_manifest("application.backup.vstore", "application.backup.vstore.manifest.json")
+manifest = create_backup_manifest(store, "application.backup.grumo")
+verify_backup_manifest("application.backup.grumo", "application.backup.grumo.manifest.json")
 ```
 
-## Known pre-1.0 limits
+## Known limits
 
-The main remaining work before a 1.0 claim includes:
+Remaining engineering work includes:
 
 - continuous hosted fuzzing, filesystem-specific power-loss certification, and
   stronger repair tooling;
 - filesystem/power-loss proof for generation activation and stronger repair tooling;
 - completing Python/native convergence for cross-domain transactions;
-- migrating Voodoo Framework compatibility adapters onto the native messaging/object/query surfaces;
+- migrating Grumo Framework compatibility adapters onto the native messaging/object/query surfaces;
 - richer Collection migration/composite-index/query-planner support and physical ordered range seeks;
 - live-query/watch convenience APIs above the durable change feed;
 - streaming object writes and zero-copy/on-disk reads (bounded native chunk
   reads are available today);
 - complete C ABI coverage and additional first-class language bindings;
 - encryption-at-rest/key-rotation design;
-- later replication/sync and Voodoo Protocol integration.
+- later replication/sync and Grumo Protocol integration.
 
 Namespace/file quotas, structured health metrics, tracing hooks, and bounded
 object lifecycle/retention policies are already part of the v0.3.0 contract.
@@ -222,11 +236,11 @@ Store Studio and distributed operation are later milestones and do not block con
 The workspace includes the standalone `grumo-store` binary. Examples:
 
 ```bash
-cargo run -p grumo-store-cli -- put application.vstore hello world
-cargo run -p grumo-store-cli -- get application.vstore hello
-cargo run -p grumo-store-cli -- health application.vstore
-cargo run -p grumo-store-cli -- verify application.vstore
-cargo run -p grumo-store-cli -- backup application.vstore application.backup.vstore
+cargo run -p grumo-store-cli -- put application.grumo hello world
+cargo run -p grumo-store-cli -- get application.grumo hello
+cargo run -p grumo-store-cli -- health application.grumo
+cargo run -p grumo-store-cli -- verify application.grumo
+cargo run -p grumo-store-cli -- backup application.grumo application.backup.grumo
 ```
 
 The CLI also exposes lifecycle, Queue, Collection, Messaging, Object, Job, Scheduler, Cron, Trigger and Workflow operations. See `docs/QUICKSTART.md` for usage guidance.
@@ -263,21 +277,21 @@ docs/
   QUICKSTART.md
 ```
 
-## Voodoo integration
+## Grumo integration
 
-Voodoo Framework/Runtime already consumes the published Python binding behind higher-level primitives while the engine stays independently usable. The 0.3 convergence work removes remaining compatibility implementations where the Rust core already has a native primitive.
+Grumo Framework/Runtime already consumes the published Python binding behind higher-level primitives while the engine stays independently usable. The 0.3 convergence work removes remaining compatibility implementations where the Rust core already has a native primitive.
 
 ```text
-Voodoo Model       -> Store Collections / data
-Voodoo @task       -> Store Jobs / Queues
-Voodoo Scheduler   -> Store schedules / Cron
-Voodoo events      -> Store Topics / Streams / Outbox
-Voodoo ObjectStore -> Store Objects
+Grumo Model       -> Store Collections / data
+Grumo @task       -> Store Jobs / Queues
+Grumo Scheduler   -> Store schedules / Cron
+Grumo events      -> Store Topics / Streams / Outbox
+Grumo ObjectStore -> Store Objects
 Execution / HITL   -> Store Workflow state
 Runtime Identity   -> durable state persisted through Store
 ```
 
-Identity/Auth semantics remain in Voodoo Runtime, not in Grumo Store.
+Identity/Auth semantics remain in Grumo Runtime, not in Grumo Store.
 
 ## Compatibility principle
 

@@ -28,3 +28,10 @@ def test_grumo_namespace_uses_new_extension_without_format_change(tmp_path) -> N
         store.put(b"key", b"value")
     with voodoo_store.Store.open(path) as store:
         assert store.get(b"key") == b"value"
+
+
+def test_grumo_migration_cli_reuses_verified_implementation() -> None:
+    from grumo_store.grumo_migration import prepare_grumo_store as grumo_prepare
+    from voodoo_store.grumo_migration import prepare_grumo_store as legacy_prepare
+
+    assert grumo_prepare is legacy_prepare

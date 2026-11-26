@@ -78,7 +78,7 @@ def prepare_grumo_store(
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Prepare a verified, non-destructive Voodoo → Grumo Store path migration"
+        description="Prepare a verified, non-destructive Voodoo to Grumo Store path migration"
     )
     parser.add_argument("source", type=Path, help="Existing closed .vstore file")
     parser.add_argument("destination", type=Path, help="New .grumo file (must not exist)")

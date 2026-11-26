@@ -117,14 +117,38 @@ jobs:
           pattern: grumo-store-*
           path: dist
           merge-multiple: true
-      - name: Refuse unexpected distributions
+      - name: Validate release artifacts and compatibility contents
         run: |
           python - <<'PY'
           from pathlib import Path
-          files = list(Path("dist").iterdir())
-          assert files, "No artifacts"
+          from zipfile import ZipFile
+          import tarfile
+
+          files = sorted(Path("dist").iterdir())
+          wheels = [p for p in files if p.suffix == ".whl"]
+          sdists = [p for p in files if p.name.endswith(".tar.gz")]
+          assert len(wheels) == 5, f"Expected 5 platform wheels, got {len(wheels)}"
+          assert len(sdists) == 1, f"Expected 1 sdist, got {len(sdists)}"
+          expected = {
+              "grumo_store/__init__.py",
+              "grumo_store/grumo_migration.py",
+              "grumo_store/backup.py",
+              "grumo_store/migrations.py",
+              "grumo_store/objects.py",
+              "voodoo_store/__init__.py",
+          }
           for file in files:
               assert file.is_file(), file
               assert file.name.startswith(("grumo_store-", "grumo-store-")), file
+          for wheel in wheels:
+              with ZipFile(wheel) as archive:
+                  members = set(archive.namelist())
+                  native = [name for name in members if name.startswith("grumo_store/_native.")]
+              assert not (expected - members), f"{wheel}: missing {sorted(expected - members)}"
+              assert len(native) == 1, f"{wheel}: expected one Grumo native extension, got {native}"
+          with tarfile.open(sdists[0], "r:gz") as archive:
+              members = archive.getnames()
+          assert any(name.endswith("/python/grumo_store/__init__.py") for name in members), "sdist omits Grumo namespace"
+          print(f"Validated {len(wheels)} wheels and one sdist")
           PY
       - uses: pypa/gh-action-pypi-publish@release/v1

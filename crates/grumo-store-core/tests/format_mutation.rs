@@ -1,4 +1,4 @@
-use voodoo_store_core::{LogRecord, RecordKind, StoreHeader};
+use grumo_store_core::{LogRecord, RecordKind, StoreHeader};
 
 #[test]
 fn every_single_byte_record_mutation_is_rejected() {

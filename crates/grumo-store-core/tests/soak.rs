@@ -3,14 +3,14 @@
 use std::fs;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use voodoo_store_core::Store;
+use grumo_store_core::Store;
 
 fn temp_path() -> std::path::PathBuf {
     let nonce = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .expect("clock")
         .as_nanos();
-    std::env::temp_dir().join(format!("voodoo-store-soak-{nonce}.vstore"))
+    std::env::temp_dir().join(format!("grumo-store-soak-{nonce}.vstore"))
 }
 
 #[test]

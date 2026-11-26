@@ -3,14 +3,14 @@ use std::io::Write;
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use voodoo_store_core::{EngineError, LogRecord, RecordKind, STORE_HEADER_LEN, Store, StoreError};
+use grumo_store_core::{EngineError, LogRecord, RecordKind, STORE_HEADER_LEN, Store, StoreError};
 
 fn temp_store_path(name: &str) -> PathBuf {
     let nonce = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
         .as_nanos();
-    std::env::temp_dir().join(format!("voodoo-store-fault-{name}-{nonce}.vstore"))
+    std::env::temp_dir().join(format!("grumo-store-fault-{name}-{nonce}.vstore"))
 }
 
 fn encode_put_payload(key: &[u8], value: &[u8]) -> Vec<u8> {

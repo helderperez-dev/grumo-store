@@ -3,7 +3,7 @@
 use std::fs;
 use std::path::PathBuf;
 
-use voodoo_store_core::Store;
+use grumo_store_core::Store;
 
 fn fixture_path() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tests/fixtures/legacy-0.2.2.vstore")

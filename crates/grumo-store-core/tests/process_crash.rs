@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use voodoo_store_core::{Durability, Store, StoreOptions};
+use grumo_store_core::{Durability, Store, StoreOptions};
 
 const CHILD_ENV: &str = "VOODOO_STORE_CRASH_CHILD";
 const PATH_ENV: &str = "VOODOO_STORE_CRASH_PATH";
@@ -14,7 +14,7 @@ fn temp_store_path(name: &str) -> PathBuf {
         .duration_since(UNIX_EPOCH)
         .unwrap()
         .as_nanos();
-    std::env::temp_dir().join(format!("voodoo-store-process-crash-{name}-{nonce}.vstore"))
+    std::env::temp_dir().join(format!("grumo-store-process-crash-{name}-{nonce}.vstore"))
 }
 
 fn run_child(path: &PathBuf, mode: &str) -> std::process::ExitStatus {

@@ -91,6 +91,9 @@ jobs:
           required = {
               "grumo_store/__init__.py",
               "grumo_store/grumo_migration.py",
+              "grumo_store/backup.py",
+              "grumo_store/migrations.py",
+              "grumo_store/objects.py",
               "voodoo_store/__init__.py",
               "voodoo_store/grumo_migration.py",
           }

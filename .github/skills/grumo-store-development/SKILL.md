@@ -1,11 +1,11 @@
 ---
-name: voodoo-store-development
-description: Develop Voodoo Store across the Rust core, native primitives, transactions, durability, PyO3 Python binding, tests, packaging, and releases. Use when modifying voodoo-store, adding Store primitives, exposing Rust capabilities to Python, changing cross-domain transactions, or preparing Store releases.
+name: grumo-store-development
+description: Develop Grumo Store across the Rust core, native primitives, transactions, durability, PyO3 Python binding, tests, packaging, and releases. Use when modifying grumo-store, adding Store primitives, exposing Rust capabilities to Python, changing cross-domain transactions, or preparing Store releases.
 ---
 
-# Voodoo Store Development
+# Grumo Store Development
 
-Voodoo Store owns durable mechanics. It must remain usable independently from Voodoo Framework.
+Grumo Store owns durable mechanics. It must remain usable independently from Grumo Framework.
 
 ## Core principles
 

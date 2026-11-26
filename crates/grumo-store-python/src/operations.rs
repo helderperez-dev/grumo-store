@@ -1,14 +1,14 @@
 use std::path::PathBuf;
 
-use pyo3::prelude::*;
-use pyo3::types::{PyBytes, PyDict, PyList};
 use grumo_store_core::{
     CheckpointError, CheckpointReport, CompactionReport, GenerationError, GenerationReport,
     HealthReport, OperationsError, RestoreReport, SnapshotError, SnapshotReport, StorageStats,
     Store as CoreStore,
 };
+use pyo3::prelude::*;
+use pyo3::types::{PyBytes, PyDict, PyList};
 
-use super::{PyStore, GrumoStoreError, map_engine_error, with_store};
+use super::{GrumoStoreError, PyStore, map_engine_error, with_store};
 
 fn map_operations_error(error: OperationsError) -> PyErr {
     GrumoStoreError::new_err(error.to_string())

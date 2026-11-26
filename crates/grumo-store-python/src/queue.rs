@@ -1,8 +1,8 @@
+use grumo_store_core::{PushOptions, QueueError, QueueMessage};
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict};
-use grumo_store_core::{PushOptions, QueueError, QueueMessage};
 
-use super::{PyStore, GrumoStoreError, with_store_mut};
+use super::{GrumoStoreError, PyStore, with_store_mut};
 
 fn map_error(error: QueueError) -> PyErr {
     GrumoStoreError::new_err(error.to_string())

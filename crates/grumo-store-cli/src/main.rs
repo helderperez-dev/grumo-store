@@ -637,7 +637,10 @@ fn collection_index(args: &[String]) -> Result<(), Box<dyn Error>> {
 
 fn collection_put(args: &[String]) -> Result<(), Box<dyn Error>> {
     if args.len() < 6 {
-        return Err("usage: grumo-store collection-put <store> <collection> <pk> <value> [index=value ...]".into());
+        return Err(
+            "usage: grumo-store collection-put <store> <collection> <pk> <value> [index=value ...]"
+                .into(),
+        );
     }
     let indexes = args[6..]
         .iter()

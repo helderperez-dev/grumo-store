@@ -1,8 +1,8 @@
+use grumo_store_core::{ChangeFeedError, ChangeKind, ChangeRecord};
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict};
-use grumo_store_core::{ChangeFeedError, ChangeKind, ChangeRecord};
 
-use super::{PyStore, GrumoStoreError, with_store, with_store_mut};
+use super::{GrumoStoreError, PyStore, with_store, with_store_mut};
 
 fn map_error(error: ChangeFeedError) -> PyErr {
     GrumoStoreError::new_err(error.to_string())

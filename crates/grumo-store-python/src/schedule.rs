@@ -1,11 +1,11 @@
-use pyo3::prelude::*;
-use pyo3::types::{PyBytes, PyDict};
 use grumo_store_core::{
     CronSchedulerError, DurableCronSchedule, DurableSchedule, DurableTrigger, JobSpec,
     ScheduleMode, TriggerError, TriggerSource,
 };
+use pyo3::prelude::*;
+use pyo3::types::{PyBytes, PyDict};
 
-use super::{PyStore, GrumoStoreError, with_store, with_store_mut};
+use super::{GrumoStoreError, PyStore, with_store, with_store_mut};
 
 fn map_error(error: impl std::fmt::Display) -> PyErr {
     GrumoStoreError::new_err(error.to_string())
@@ -137,9 +137,8 @@ fn trigger_source(
             collection: source_name.ok_or_else(|| {
                 GrumoStoreError::new_err("collection trigger requires source_name")
             })?,
-            operation: operation.ok_or_else(|| {
-                GrumoStoreError::new_err("collection trigger requires operation")
-            })?,
+            operation: operation
+                .ok_or_else(|| GrumoStoreError::new_err("collection trigger requires operation"))?,
         }),
         "stream" => Ok(TriggerSource::Stream {
             stream: source_name

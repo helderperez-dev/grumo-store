@@ -1,8 +1,8 @@
+use grumo_store_core::{ObjectError, ObjectId};
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict};
-use grumo_store_core::{ObjectError, ObjectId};
 
-use super::{PyStore, GrumoStoreError, with_store, with_store_mut};
+use super::{GrumoStoreError, PyStore, with_store, with_store_mut};
 
 fn map_object_error(error: ObjectError) -> PyErr {
     GrumoStoreError::new_err(error.to_string())

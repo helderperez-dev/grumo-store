@@ -1,12 +1,12 @@
-use pyo3::prelude::*;
-use pyo3::types::PyBytes;
 use grumo_store_core::{
     CollectionDefinition, CollectionError, CollectionRecord, IndexDefinition, IndexRangeQuery,
     IndexValue, QueryBound, QueryError, QueryOrder,
 };
+use pyo3::prelude::*;
+use pyo3::types::PyBytes;
 
 use super::{
-    PendingOperation, PyStore, PyTransaction, GrumoStoreError, with_store, with_store_mut,
+    GrumoStoreError, PendingOperation, PyStore, PyTransaction, with_store, with_store_mut,
 };
 
 type PyRecord = (Py<PyBytes>, Py<PyBytes>, Vec<(Py<PyBytes>, Py<PyBytes>)>);

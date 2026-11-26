@@ -1,8 +1,8 @@
+use grumo_store_core::MessagingError;
 use pyo3::prelude::*;
 use pyo3::types::PyBytes;
-use grumo_store_core::MessagingError;
 
-use super::{PyStore, GrumoStoreError, with_store_mut};
+use super::{GrumoStoreError, PyStore, with_store_mut};
 
 type PyStreamEntry = (u64, Py<PyBytes>);
 

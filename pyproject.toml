@@ -27,7 +27,7 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/helderperez-dev/grumo-store"
 Repository = "https://github.com/helderperez-dev/grumo-store"
-Issues = "https://github.com/helderperez-dev/voodoo-store/issues"
+Issues = "https://github.com/helderperez-dev/grumo-store/issues"
 
 [tool.maturin]
 manifest-path = "crates/voodoo-store-python/Cargo.toml"

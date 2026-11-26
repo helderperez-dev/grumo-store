@@ -1,7 +1,7 @@
-use pyo3::prelude::*;
 use grumo_store_core::JobSpec;
+use pyo3::prelude::*;
 
-use super::{PendingOperation, PyTransaction, GrumoStoreError};
+use super::{GrumoStoreError, PendingOperation, PyTransaction};
 
 fn parse_object_id(id: &[u8]) -> PyResult<[u8; 32]> {
     id.try_into()

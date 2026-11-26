@@ -12,7 +12,7 @@ def test_grumo_migration_keeps_original_and_verifies_rollback(tmp_path: Path) ->
     source.parent.mkdir()
     with Store.open(source) as store:
         store.put(b"user:42", b"preserved")
-        original_id = store.health_report()["store_id"]
+        original_id = store.health_report()["store_id"].hex()
 
     old_bytes = source.read_bytes()
     destination = tmp_path / ".grumo" / "application.grumo"
@@ -20,7 +20,7 @@ def test_grumo_migration_keeps_original_and_verifies_rollback(tmp_path: Path) ->
     report = prepare_grumo_store(source, destination, backup=backup)
 
     assert report["activated"] is False
-    assert report["store_id"] == original_id.hex()
+    assert report["store_id"] == original_id
     assert source.read_bytes() == old_bytes
     assert backup.read_bytes() == old_bytes
     assert destination.read_bytes() == old_bytes

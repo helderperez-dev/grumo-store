@@ -6,6 +6,35 @@ on:
   pull_request:
 
 jobs:
+  # One-time lockfile refresh, restricted to this repository's migration PR.
+  # The build-only GitHub token cannot trigger another workflow run; subsequent
+  # author commits still receive normal CI validation.
+  refresh-pyo3-lock:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feat/grumo-store-package-cutover' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/grumo-store-package-cutover
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Update lockfile to patched PyO3
+        run: |
+          cargo update -p pyo3 --precise 0.29.0
+          cargo check --workspace --all-targets
+      - name: Commit verified Cargo.lock
+        run: |
+          if git diff --quiet -- Cargo.lock; then
+            echo "Cargo.lock already current"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Cargo.lock
+          git commit -m "chore(lockfile): resolve patched PyO3 0.29 dependency tree"
+          git push origin HEAD:feat/grumo-store-package-cutover
+
   audit:
     name: RustSec dependency audit
     runs-on: ubuntu-latest

@@ -60,7 +60,7 @@ jobs:
       - name: Upload validated Grafana dashboard
         uses: actions/upload-artifact@v4
         with:
-          name: voodoo-store-grafana-dashboard
+          name: grumo-store-grafana-dashboard
           path: docs/OBSERVABILITY_GRAFANA_DASHBOARD.json
           if-no-files-found: error
       - name: Format

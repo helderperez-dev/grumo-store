@@ -1,4 +1,4 @@
-# Voodoo Store Correctness Invariants
+# Grumo Store Correctness Invariants
 
 These invariants are normative. Implementations may change, but these rules must remain true unless the specification is deliberately versioned.
 

@@ -11,7 +11,7 @@ ROOT = Path(__file__).parents[1]
 
 def _benchmark_module():
     path = ROOT / "scripts/benchmark_store.py"
-    spec = importlib.util.spec_from_file_location("voodoo_store_benchmark_contract", path)
+    spec = importlib.util.spec_from_file_location("grumo_store_benchmark_contract", path)
     if spec is None or spec.loader is None:
         raise SystemExit("benchmark module is not importable")
     module = importlib.util.module_from_spec(spec)
@@ -21,7 +21,7 @@ def _benchmark_module():
 
 def main() -> int:
     module = _benchmark_module()
-    with tempfile.TemporaryDirectory(prefix="voodoo-store-history-") as directory:
+    with tempfile.TemporaryDirectory(prefix="grumo-store-history-") as directory:
         history = Path(directory) / "history.jsonl"
         for elapsed in (100.0, 110.0, 90.0):
             module.append_history(history, {"elapsed_ms": elapsed, "iterations": 1000})

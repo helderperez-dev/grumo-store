@@ -3,6 +3,6 @@ revision = 3
 requires-python = ">=3.9"
 
 [[package]]
-name = "voodoo-store"
-version = "0.3.0"
+name = "grumo-store"
+version = "2.0.0"
 source = { editable = "." }

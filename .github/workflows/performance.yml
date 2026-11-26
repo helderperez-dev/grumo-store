@@ -21,31 +21,31 @@ jobs:
       - name: Restore retained benchmark history
         uses: actions/cache/restore@v4
         with:
-          path: /tmp/voodoo-store-performance-history.jsonl
-          key: voodoo-store-performance-${{ github.run_id }}
-          restore-keys: voodoo-store-performance-
+          path: /tmp/grumo-store-performance-history.jsonl
+          key: grumo-store-performance-${{ github.run_id }}
+          restore-keys: grumo-store-performance-
       - name: Build and install binding
         run: python -m pip install .
       - name: Run retained benchmark budget
         run: |
           python scripts/benchmark_store.py --iterations 1000 --max-ms 30000 \
-            --result /tmp/voodoo-store-performance.json \
-            --history /tmp/voodoo-store-performance-history.jsonl \
-            | tee /tmp/voodoo-store-performance.stdout.json
+            --result /tmp/grumo-store-performance.json \
+            --history /tmp/grumo-store-performance-history.jsonl \
+            | tee /tmp/grumo-store-performance.stdout.json
           python scripts/benchmark_store.py \
-            --trend /tmp/voodoo-store-performance-history.jsonl \
-            > /tmp/voodoo-store-performance-trend.json
+            --trend /tmp/grumo-store-performance-history.jsonl \
+            > /tmp/grumo-store-performance-trend.json
       - name: Upload benchmark result
         uses: actions/upload-artifact@v4
         with:
-          name: voodoo-store-performance
+          name: grumo-store-performance
           path: |
-            /tmp/voodoo-store-performance.json
-            /tmp/voodoo-store-performance-history.jsonl
-            /tmp/voodoo-store-performance.stdout.json
-            /tmp/voodoo-store-performance-trend.json
+            /tmp/grumo-store-performance.json
+            /tmp/grumo-store-performance-history.jsonl
+            /tmp/grumo-store-performance.stdout.json
+            /tmp/grumo-store-performance-trend.json
       - name: Retain benchmark history for the next run
         uses: actions/cache/save@v4
         with:
-          path: /tmp/voodoo-store-performance-history.jsonl
-          key: voodoo-store-performance-${{ github.run_id }}
+          path: /tmp/grumo-store-performance-history.jsonl
+          key: grumo-store-performance-${{ github.run_id }}

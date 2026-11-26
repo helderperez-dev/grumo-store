@@ -5,7 +5,7 @@
   "write_policy": "current-minor",
   "backup_policy": "verify-before-restore",
   "migration_required_for_major_change": true,
-  "supported_python_binding": ">=1.0.0,<2.0.0",
+  "supported_python_binding": ">=2.0.0,<3.0.0",
   "supported_previous_releases": [
     "0.2.2",
     "0.3.2"

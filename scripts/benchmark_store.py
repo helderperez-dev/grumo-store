@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from voodoo_store import Store
+from grumo_store import Store
 
 BENCHMARK_SCHEMA_VERSION = 1
 

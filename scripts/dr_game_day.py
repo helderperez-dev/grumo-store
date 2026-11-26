@@ -9,7 +9,7 @@ import tempfile
 from importlib import metadata
 from pathlib import Path
 
-from voodoo_store import (
+from grumo_store import (
     CorruptionError,
     Store,
     create_backup_manifest,
@@ -26,7 +26,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--artifact-version",
-        help="require the installed Grumo or Voodoo Store distribution to match this version",
+        help="require the installed Grumo Store distribution to match this version",
     )
     parser.add_argument(
         "--validate-evidence",
@@ -36,15 +36,15 @@ def main() -> int:
     args = parser.parse_args()
 
     # Prefer the renamed package. Retain old-name support for operators
-    # running this drill against a legacy voodoo-store installation.
-    for distribution_name in ("grumo-store", "voodoo-store"):
+    # running this drill against a incorrect Store installation.
+    for distribution_name in ("grumo-store",):
         try:
             distribution = metadata.distribution(distribution_name)
             break
         except metadata.PackageNotFoundError:
             continue
     else:
-        raise SystemExit("no installed grumo-store or voodoo-store distribution found")
+        raise SystemExit("no installed grumo-store distribution found")
 
     installed_version = distribution.version
     record = distribution.read_text("RECORD")
@@ -59,7 +59,7 @@ def main() -> int:
             f"{args.artifact_version}: {installed_version}"
         )
 
-    with tempfile.TemporaryDirectory(prefix="voodoo-store-dr-") as root:
+    with tempfile.TemporaryDirectory(prefix="grumo-store-dr-") as root:
         root_path = Path(root)
         source = root_path / "application.vstore"
         backup = root_path / "backup.vstore"

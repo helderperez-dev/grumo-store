@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from voodoo_store import Store
+from grumo_store import Store
 
 
 def test_once_and_interval_schedules_create_durable_jobs(tmp_path):

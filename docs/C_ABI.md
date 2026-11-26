@@ -1,6 +1,6 @@
-# Voodoo Store C ABI
+# Grumo Store C ABI
 
-The `voodoo-store-ffi` crate is the language-neutral portability layer. The
+The `grumo-store-ffi` crate is the language-neutral portability layer. The
 Python extension remains the release-critical binding; the C ABI is maintained
 as a stable foundation for additional bindings.
 

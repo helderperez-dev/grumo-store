@@ -3,7 +3,7 @@
 The Python binding accepts an optional `max_bytes` argument on
 `Store.open(...)`. When configured, every native log append is checked against
 the limit before writing. A write that would exceed the limit returns a
-`VoodooStoreError`; committed state remains readable and the rejected mutation
+`GrumoStoreError`; committed state remains readable and the rejected mutation
 is not applied.
 
 `Store.open(...)` also accepts `namespace_max_bytes`. This applies a live-value
@@ -13,7 +13,7 @@ transaction does not become visible after reopen and is reported as
 `NamespaceQuotaError`.
 
 `health_report()` exposes `max_bytes` and `within_limit` alongside storage
-accounting. The Framework Runtime passes `VOODOO_STORE_MAX_BYTES` through to the
+accounting. The Framework Runtime passes `GRUMO_STORE_MAX_BYTES` through to the
 native binding and also rejects an already oversized file during startup.
 
 The same health report includes aggregate native queue depth (`queue_ready`,

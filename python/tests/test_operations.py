@@ -5,11 +5,11 @@ import json
 from pathlib import Path
 
 import pytest
-from voodoo_store import (
+from grumo_store import (
     CorruptionError,
     IoError,
     Store,
-    VoodooStoreError,
+    GrumoStoreError,
     create_backup_manifest,
     verify_backup_manifest,
 )
@@ -103,7 +103,7 @@ def test_native_storage_quota_is_reported_and_enforced(tmp_path: Path) -> None:
         health = store.health_report()
         assert health["max_bytes"] == initial_bytes
         assert health["within_limit"] is True
-        with pytest.raises(VoodooStoreError, match="quota"):
+        with pytest.raises(GrumoStoreError, match="quota"):
             store.put(b"over-quota", b"value")
 
 

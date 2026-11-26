@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from voodoo_store import Store
+from grumo_store import Store
 
 
 def test_workflow_signal_wait_survives_reopen(tmp_path):

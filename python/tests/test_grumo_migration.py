@@ -3,8 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from voodoo_store import Store
-from voodoo_store.grumo_migration import prepare_grumo_store
+from grumo_store import Store
+from grumo_store.grumo_migration import prepare_grumo_store
 
 
 def test_grumo_migration_keeps_original_and_verifies_rollback(tmp_path: Path) -> None:

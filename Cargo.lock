@@ -285,15 +285,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
 
 [[package]]
-name = "voodoo-store-cli"
-version = "1.0.0"
+name = "grumo-store-cli"
+version = "2.0.0"
 dependencies = [
- "voodoo-store-core",
+ "grumo-store-core",
 ]
 
 [[package]]
-name = "voodoo-store-core"
-version = "1.0.0"
+name = "grumo-store-core"
+version = "2.0.0"
 dependencies = [
  "crc32fast",
  "fs2",
@@ -303,18 +303,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "voodoo-store-ffi"
-version = "1.0.0"
+name = "grumo-store-ffi"
+version = "2.0.0"
 dependencies = [
- "voodoo-store-core",
+ "grumo-store-core",
 ]
 
 [[package]]
-name = "voodoo-store-python"
-version = "1.0.0"
+name = "grumo-store-python"
+version = "2.0.0"
 dependencies = [
  "pyo3",
- "voodoo-store-core",
+ "grumo-store-core",
 ]
 
 [[package]]

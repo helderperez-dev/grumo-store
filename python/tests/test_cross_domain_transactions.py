@@ -6,7 +6,7 @@ import textwrap
 
 import pytest
 
-from voodoo_store import Store
+from grumo_store import Store
 
 
 def test_heterogeneous_operations_share_one_commit(tmp_path):
@@ -239,7 +239,7 @@ def test_abrupt_process_exit_does_not_leak_staged_cross_domain_state(tmp_path):
         import sys
         from pathlib import Path
 
-        from voodoo_store import Store
+        from grumo_store import Store
 
         store = Store.open(Path(sys.argv[1]))
         tx = store.transaction()

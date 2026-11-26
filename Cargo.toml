@@ -1,9 +1,9 @@
 [workspace]
 members = [
-    "crates/voodoo-store-core",
-    "crates/voodoo-store-ffi",
-    "crates/voodoo-store-cli",
-    "crates/voodoo-store-python",
+    "crates/grumo-store-core",
+    "crates/grumo-store-ffi",
+    "crates/grumo-store-cli",
+    "crates/grumo-store-python",
 ]
 resolver = "2"
 

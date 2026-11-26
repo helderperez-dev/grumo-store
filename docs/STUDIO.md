@@ -1,28 +1,28 @@
-# Voodoo Store Studio
+# Grumo Store Studio
 
-Voodoo Store Studio is the visual administration surface for Voodoo Store.
+Grumo Store Studio is the visual administration surface for Grumo Store.
 
-Its purpose is broader than a database table viewer. Voodoo Store is intended to own application state across data, queues, jobs, schedules, messaging, objects, workflows and operational metadata, so Studio must expose those primitives through one coherent local interface.
+Its purpose is broader than a database table viewer. Grumo Store is intended to own application state across data, queues, jobs, schedules, messaging, objects, workflows and operational metadata, so Studio must expose those primitives through one coherent local interface.
 
 ## Product principle
 
-> If Voodoo Store replaces multiple infrastructure services, Studio should replace the multiple dashboards normally required to operate them.
+> If Grumo Store replaces multiple infrastructure services, Studio should replace the multiple dashboards normally required to operate them.
 
 A developer should be able to run:
 
 ```bash
-voodoo-store studio app.vstore
+grumo-store studio app.vstore
 ```
 
 and receive a local browser application for inspecting and administering the store.
 
-Inside a Voodoo project, the preferred experience becomes:
+Inside a Grumo project, the preferred experience becomes:
 
 ```bash
-voodoo store studio
+grumo store studio
 ```
 
-The main Voodoo CLI discovers the configured store automatically and launches the same Studio implementation.
+The main Grumo CLI discovers the configured store automatically and launches the same Studio implementation.
 
 ## Architecture
 
@@ -31,11 +31,11 @@ Browser
    |
    | localhost HTTP / WebSocket
    v
-Voodoo Store Studio Server
+Grumo Store Studio Server
    |
    | stable Rust API / future public administration API
    v
-Voodoo Store
+Grumo Store
    |
    +-- Data
    +-- Queues / Jobs
@@ -228,7 +228,7 @@ Durable workflow inspection should make orchestration understandable:
 - parent/child executions;
 - event timeline.
 
-This becomes especially important for AI-generated Voodoo applications because Studio can explain what the generated system is doing at runtime.
+This becomes especially important for AI-generated Grumo applications because Studio can explain what the generated system is doing at runtime.
 
 ### Operations
 
@@ -248,6 +248,8 @@ Dangerous repair operations must be visually separated from normal administratio
 
 ### Observability
 
+Studio must consume native health and inspection APIs directly. Monitoring, alert evaluation and bounded metric history are planned native capabilities, with no external collector or dashboard dependency. A live Store must be inspected through its owning process rather than opening a second writer.
+
 Studio should eventually unify operational debugging across the Store:
 
 - transactions;
@@ -261,16 +263,16 @@ Studio should eventually unify operational debugging across the Store:
 - store growth;
 - compaction backlog.
 
-## Relationship to Voodoo Runtime and Builder
+## Relationship to Grumo Runtime and Builder
 
-Studio should use the same Voodoo visual language and Design System as future Runtime and Builder tooling, but remain independently launchable.
+Studio should use the same Grumo visual language and Design System as future Runtime and Builder tooling, but remain independently launchable.
 
 Long term:
 
 ```text
-Voodoo Builder
-Voodoo Runtime Console
-Voodoo Store Studio
+Grumo Builder
+Grumo Runtime Console
+Grumo Store Studio
         |
         +-- shared Design System
         +-- shared inspection primitives
@@ -332,6 +334,6 @@ Studio is not:
 - a replacement for Store APIs;
 - an arbitrary code execution console;
 - a required dependency for applications;
-- a reason to couple Voodoo Store to Voodoo Framework.
+- a reason to couple Grumo Store to Grumo Framework.
 
 A `.vstore` must remain fully usable headlessly and from any supported language without Studio installed.

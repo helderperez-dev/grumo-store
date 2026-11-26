@@ -1,13 +1,13 @@
-# Voodoo Store version and binding policy
+# Grumo Store version and binding policy
 
-The current release line is **0.3.x** (`voodoo-store` Python binding and Rust
+The target release line is **2.0.x** (`grumo-store` Python binding and Rust
 workspace). The binding supports Python **3.9–3.13** through the `abi3` PyO3
 surface. The on-disk `.vstore` format is versioned independently from the
 package and must be checked with `Store.verify()` before an upgrade or restore.
 
 ## Compatibility rules
 
-- Patch releases preserve the documented 0.3 format and Python API contract.
+- Patch releases preserve the documented format 1.0 and Python API contract.
 - Minor releases may add format records but must retain forward recovery of
   committed data and publish compatibility fixtures before release.
 - A format-major change requires an explicit migration tool and a new release
@@ -15,12 +15,9 @@ package and must be checked with `Store.verify()` before an upgrade or restore.
   supported.
 - Native Rust APIs are documented in `docs/SPEC.md`; Python binding behavior is
   documented in `docs/BINDING_CONTRACT.md`.
-- Pin the exact package and keep a verified backup before upgrading a pre-1.0
+- Pin the exact package and keep a verified backup before upgrading an existing
   deployment.
-- The only supported previous release for the current 0.3.x line is **0.2.2**;
-  it is retained as a checksum-verified fixture and exercised by the upgrade,
-  backup, and fresh-path rollback test. Releases not listed in the compatibility
-  manifest are outside the supported upgrade promise.
+- The retained historical 0.2.2 fixture provides regression evidence for the unchanged file format. Package API compatibility is not promised across major releases.
 
 ## Upgrade and rollback procedure
 

@@ -4,6 +4,12 @@ All notable changes to Grumo Store (formerly Voodoo Store) are documented here.
 
 ## [Unreleased]
 
+## [2.0.0]
+
+- Breaking identity cutover: canonical Grumo Python namespace, Rust crates, CLI and C ABI only.
+- Remove transitional package aliases and external dashboard integration.
+- Preserve native health reporting and binary storage format 1.0.
+
 ## [1.0.0]
 
 - First stable-version release under the Grumo Store identity.

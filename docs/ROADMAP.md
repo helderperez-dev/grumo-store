@@ -1,10 +1,10 @@
-# Voodoo Store Roadmap
+# Grumo Store Roadmap
 
 The roadmap is intentionally bottom-up. Features that depend on durability, ordering, or transactions do not advance until the layer below has crash/fault coverage.
 
 ## Current position — Python v0.3.0 native surface convergence
 
-Voodoo Store is already beyond a KV/queue prototype. The current single-node engine persists structured data, background work, scheduling, messaging, objects and workflow state in one `.vstore` without requiring external infrastructure.
+Grumo Store is already beyond a KV/queue prototype. The current single-node engine persists structured data, background work, scheduling, messaging, objects and workflow state in one `.vstore` without requiring external infrastructure.
 
 Implemented today:
 
@@ -215,7 +215,7 @@ Goal: persist orchestration state without turning Store into a code executor.
 - [x] staged workflow history sequence allocation
 - [ ] compensation metadata/policies
 
-The workflow executor remains outside Voodoo Store.
+The workflow executor remains outside Grumo Store.
 
 ## M7 — Security and operations
 
@@ -299,18 +299,18 @@ The 0.3 gate closes when application code can reach the Store's differentiating 
 
 ---
 
-## M7.5 — Voodoo Store Studio
+## M7.5 — Grumo Store Studio
 
 Goal: provide a first-class local visual administration experience for every major Store primitive.
 
-Principle: if Voodoo Store replaces multiple infrastructure services, Studio should replace the multiple dashboards normally required to operate them.
+Principle: if Grumo Store replaces multiple infrastructure services, Studio should replace the multiple dashboards normally required to operate them.
 
 Planned command surface:
 
-- [ ] `voodoo-store studio app.vstore`
+- [ ] `grumo-store studio app.vstore`
 - [ ] `voodoo store studio` with automatic project-store discovery
 - [ ] configurable local port and `--no-open`
-- [x] read-only mode (`voodoo-store inspect` aliases the health report without mutation)
+- [x] read-only mode (`grumo-store inspect` aliases the health report without mutation)
 - [ ] explicit capability gate for destructive mutations
 
 Planned surfaces:
@@ -368,7 +368,7 @@ Goal: connect correct local stores safely.
 - [ ] Swift binding
 - [ ] Java/.NET compatibility proof
 - [x] cross-language compatibility fixtures for the same `.vstore` (the retained 0.2.2 fixture is verified by both Python binding restore tests and the Rust core engine)
-- [ ] Voodoo Store Studio
+- [ ] Grumo Store Studio
 - [ ] main `voodoo` CLI integration
 
 ## Zero External Infrastructure milestone

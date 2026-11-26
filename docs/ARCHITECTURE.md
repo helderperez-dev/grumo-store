@@ -1,12 +1,12 @@
-# Voodoo Store Architecture
+# Grumo Store Architecture
 
 ## Core principle
 
-Voodoo Store is an independent embedded application-state engine written in Rust.
+Grumo Store is an independent embedded application-state engine written in Rust.
 
-It is **not** a component that requires Voodoo Framework. Voodoo Framework is a first-class consumer of Voodoo Store, but the engine must remain useful from Rust, C, C++, Python, JavaScript/TypeScript, Go, Java, Swift, Kotlin, .NET, and other runtimes.
+It is **not** a component that requires Voodoo Framework. Voodoo Framework is a first-class consumer of Grumo Store, but the engine must remain useful from Rust, C, C++, Python, JavaScript/TypeScript, Go, Java, Swift, Kotlin, .NET, and other runtimes.
 
-> The storage format and semantics belong to Voodoo Store, not to any host language or framework.
+> The storage format and semantics belong to Grumo Store, not to any host language or framework.
 
 ## Alignment with Voodoo
 
@@ -16,7 +16,7 @@ Voodoo's runtime model is:
 Entity -> State -> Intent -> Capability -> Execution -> Effect -> State
 ```
 
-Voodoo Store does not own or duplicate that ontology. It is the durable substrate beneath the pieces that need persistence, ordering, time, delivery, recovery, retention, or replay.
+Grumo Store does not own or duplicate that ontology. It is the durable substrate beneath the pieces that need persistence, ordering, time, delivery, recovery, retention, or replay.
 
 ```text
 Voodoo Framework / Runtime
@@ -24,7 +24,7 @@ Voodoo Framework / Runtime
 Entity / State / Execution / Effect / Time / Event
                      |
                      v
-               Voodoo Store
+               Grumo Store
                      |
     +----------------+----------------+
     |                |                |
@@ -43,7 +43,7 @@ Entity / State / Execution / Effect / Time / Event
 
 ### Boundary rule
 
-If a capability primarily concerns **state, time, delivery, consistency, ordering, durability, retention, or replay**, it is a candidate for Voodoo Store.
+If a capability primarily concerns **state, time, delivery, consistency, ordering, durability, retention, or replay**, it is a candidate for Grumo Store.
 
 If it primarily concerns **executing user code, HTTP, UI rendering, model inference, orchestration policy, network topology, or application-specific authorization decisions**, it belongs outside the Store.
 
@@ -71,22 +71,22 @@ Applications
     |
 Language bindings / adapters
     |
-Stable C ABI (voodoo-store-ffi)
+Stable C ABI (grumo-store-ffi)
     |
 Rust public API
     |
-voodoo-store-core
+grumo-store-core
     |
 Storage format / transaction log / indexes / objects / messaging / time
     |
 Filesystem / OS
 ```
 
-Rust applications may use `voodoo-store-core` directly. Other language bindings should normally target the stable C ABI rather than duplicate engine logic.
+Rust applications may use `grumo-store-core` directly. Other language bindings should normally target the stable C ABI rather than duplicate engine logic.
 
 ## Crate boundaries
 
-### `voodoo-store-core`
+### `grumo-store-core`
 
 Owns correctness and portable semantics.
 
@@ -116,7 +116,7 @@ Must not depend on:
 - a cloud provider
 - a specific UI
 
-### `voodoo-store-ffi`
+### `grumo-store-ffi`
 
 Owns the stable C ABI:
 
@@ -420,6 +420,6 @@ If not, the design is incomplete.
 
 ## Non-goals
 
-Voodoo Store is not a web framework, HTTP server, AI runtime, UI framework, arbitrary code-execution engine, or a claim to replace globally distributed hyperscale databases for every workload.
+Grumo Store is not a web framework, HTTP server, AI runtime, UI framework, arbitrary code-execution engine, or a claim to replace globally distributed hyperscale databases for every workload.
 
 The goal is an embedded application-infrastructure engine that can replace multiple external components for a broad class of local-first, edge, desktop, service and moderate-scale server workloads.

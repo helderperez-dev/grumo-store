@@ -1,6 +1,6 @@
-# Voodoo Store v0.3 Quickstart
+# Grumo Store v0.3 Quickstart
 
-Voodoo Store v0.3.0 is a usable embedded application-state engine. It is still pre-1.0, but the current single-node engine already provides durable application data, transactions, TTL, collections/indexes, queues, jobs, scheduling, cron, triggers, streams/topics, consumer groups, request/reply state, objects, workflows, transactional outbox events, backup/restore/snapshots, quotas and operational health without requiring Redis, PostgreSQL, Kafka, RabbitMQ, Celery or S3 by default.
+Grumo Store v0.3.0 is a usable embedded application-state engine. It is still pre-1.0, but the current single-node engine already provides durable application data, transactions, TTL, collections/indexes, queues, jobs, scheduling, cron, triggers, streams/topics, consumer groups, request/reply state, objects, workflows, transactional outbox events, backup/restore/snapshots, quotas and operational health without requiring Redis, PostgreSQL, Kafka, RabbitMQ, Celery or S3 by default.
 
 The core remains framework-agnostic. Voodoo Runtime, language bindings and external adapters sit above it.
 
@@ -18,7 +18,7 @@ The CI baseline covers Format, Clippy, Linux, macOS, Windows and Rust 1.85 MSRV.
 The fastest way to see the current architecture is the executable example:
 
 ```bash
-cargo run -p voodoo-store-core --example application_state -- application.vstore
+cargo run -p grumo-store-core --example application_state -- application.vstore
 ```
 
 It commits application state, a durable Job and an Outbox Event through one Store transaction:
@@ -38,8 +38,8 @@ If that commit does not exist after recovery, none of those staged mutations bec
 A store is created when first opened or written:
 
 ```bash
-cargo run -p voodoo-store-cli -- put app.vstore app:name demo
-cargo run -p voodoo-store-cli -- get app.vstore app:name
+cargo run -p grumo-store-cli -- put app.vstore app:name demo
+cargo run -p grumo-store-cli -- get app.vstore app:name
 ```
 
 Expected value:
@@ -51,7 +51,7 @@ demo
 ## 4. Inspect health
 
 ```bash
-cargo run -p voodoo-store-cli -- health app.vstore
+cargo run -p grumo-store-cli -- health app.vstore
 ```
 
 Health/storage accounting is shared by the CLI, future Store Studio and Runtime integrations. It reports store identity, format, physical/live storage and subsystem namespaces.
@@ -59,7 +59,7 @@ Health/storage accounting is shared by the CLI, future Store Studio and Runtime 
 ## 5. Verify durability/recovery
 
 ```bash
-cargo run -p voodoo-store-cli -- verify app.vstore
+cargo run -p grumo-store-cli -- verify app.vstore
 ```
 
 Verification validates the header, checksums and recoverable transaction prefix without mutating the store.
@@ -67,10 +67,10 @@ Verification validates the header, checksums and recoverable transaction prefix 
 ## 6. Backup, restore, snapshot and compact copy
 
 ```bash
-cargo run -p voodoo-store-cli -- backup app.vstore app.backup.vstore
-cargo run -p voodoo-store-cli -- restore-copy app.backup.vstore restored.vstore
-cargo run -p voodoo-store-cli -- snapshot app.vstore snapshot.vstore
-cargo run -p voodoo-store-cli -- compact-copy app.vstore compacted.vstore
+cargo run -p grumo-store-cli -- backup app.vstore app.backup.vstore
+cargo run -p grumo-store-cli -- restore-copy app.backup.vstore restored.vstore
+cargo run -p grumo-store-cli -- snapshot app.vstore snapshot.vstore
+cargo run -p grumo-store-cli -- compact-copy app.vstore compacted.vstore
 ```
 
 These create explicit files rather than replacing the live Store in place. Atomic identity-preserving generation replacement remains a later lifecycle milestone.
@@ -80,25 +80,25 @@ These create explicit files rather than replacing the live Store in place. Atomi
 Push work:
 
 ```bash
-cargo run -p voodoo-store-cli -- queue-push app.vstore emails 'welcome:user:1'
+cargo run -p grumo-store-cli -- queue-push app.vstore emails 'welcome:user:1'
 ```
 
 Inspect state:
 
 ```bash
-cargo run -p voodoo-store-cli -- queue-stats app.vstore emails
+cargo run -p grumo-store-cli -- queue-stats app.vstore emails
 ```
 
 Claim with `now_ms` and a lease duration:
 
 ```bash
-cargo run -p voodoo-store-cli -- queue-claim app.vstore emails 1000 30000
+cargo run -p grumo-store-cli -- queue-claim app.vstore emails 1000 30000
 ```
 
 A claim returns an ID and lease generation. ACK must include both, protecting against a stale worker acknowledging a lease that has already expired and been reassigned.
 
 ```bash
-cargo run -p voodoo-store-cli -- queue-ack app.vstore emails <id> <lease_generation>
+cargo run -p grumo-store-cli -- queue-ack app.vstore emails <id> <lease_generation>
 ```
 
 Delayed delivery, priority, NACK/retry and dead state are also supported.
@@ -106,7 +106,7 @@ Delayed delivery, priority, NACK/retry and dead state are also supported.
 ## 8. Rust API: transactions
 
 ```rust
-use voodoo_store_core::{JobSpec, Store};
+use grumo_store_core::{JobSpec, Store};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut store = Store::open("application.vstore")?;
@@ -121,7 +121,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-This is the core Voodoo Store advantage: related application state and durable infrastructure work can share one durability boundary instead of coordinating a database and a separate broker/outbox service.
+This is the core Grumo Store advantage: related application state and durable infrastructure work can share one durability boundary instead of coordinating a database and a separate broker/outbox service.
 
 ## 9. TTL / cache
 
@@ -157,7 +157,7 @@ The initial consumer-group model is intentionally single-partition per stream/gr
 
 ## 13. Durable request/reply
 
-Voodoo Store can persist request/reply correlation without executing RPC code itself. A Runtime or worker consumes pending requests and atomically replaces the request with a durable response. Requests can have deadlines and can be staged inside an application transaction.
+Grumo Store can persist request/reply correlation without executing RPC code itself. A Runtime or worker consumes pending requests and atomically replaces the request with a durable response. Requests can have deadlines and can be staged inside an application transaction.
 
 ## 14. Objects
 
@@ -169,7 +169,7 @@ remain later engine work.
 
 ## 15. Workflows / HITL
 
-Workflow persistence includes durable instance state, current step, history, timers, signals, waits and restart/resume state. Voodoo Store persists orchestration state; the workflow executor remains outside the storage engine.
+Workflow persistence includes durable instance state, current step, history, timers, signals, waits and restart/resume state. Grumo Store persists orchestration state; the workflow executor remains outside the storage engine.
 
 ## 16. What is safe to use in v0.3
 

@@ -1,8 +1,8 @@
-# Voodoo Store Language Binding Contract
+# Grumo Store Language Binding Contract
 
 Status: living binding contract. Python binding v0.3.0 is the current line and exposes the converged Rust-core primitives.
 
-This document defines the boundary between `voodoo-store-core` and language-specific bindings. It exists so Python, Node.js, Go, Swift, Java/.NET, and the Voodoo Framework can integrate without leaking host-runtime assumptions into the storage engine.
+This document defines the boundary between `grumo-store-core` and language-specific bindings. It exists so Python, Node.js, Go, Swift, Java/.NET, and the Voodoo Framework can integrate without leaking host-runtime assumptions into the storage engine.
 
 ## Principle
 
@@ -24,7 +24,7 @@ language adapter
 stable binding surface
         |
         v
-voodoo-store-core
+grumo-store-core
         |
         v
 .vstore
@@ -187,7 +187,7 @@ Required semantic preservation includes:
 - one-shot/interval/cron schedules
 - transactional trigger-to-job firing
 
-The Runtime executes handlers. Voodoo Store only persists and arbitrates durable work state.
+The Runtime executes handlers. Grumo Store only persists and arbitrates durable work state.
 
 ## Messaging and RPC
 
@@ -276,7 +276,7 @@ The Python package is thin and Rust-backed using PyO3/maturin. The binding must 
 Suggested public shape:
 
 ```python
-from voodoo_store import Store
+from grumo_store import Store
 
 with Store.open("application.vstore") as store:
     store.put(b"user:1", b"...")
@@ -294,7 +294,7 @@ This example is ergonomic guidance only. The Rust core remains the semantic sour
 
 ## Voodoo Framework adapter target
 
-The Voodoo adapter should sit above the Python/native binding rather than become part of `voodoo-store-core`.
+The Voodoo adapter should sit above the Python/native binding rather than become part of `grumo-store-core`.
 
 The adapter may provide conventions such as:
 
@@ -306,7 +306,7 @@ The adapter may provide conventions such as:
 - framework scheduler/workflow executors
 - developer tooling integration
 
-But a user must remain able to use Voodoo Store without Voodoo Framework.
+But a user must remain able to use Grumo Store without Voodoo Framework.
 
 ## Compatibility requirements before publishing bindings
 

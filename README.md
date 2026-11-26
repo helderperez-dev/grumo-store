@@ -1,20 +1,20 @@
-# Voodoo Store
+# Grumo Store
 
 > **Application infrastructure in a store.**
 
-Voodoo Store is a **standalone, 100% Rust embedded application-state engine** built around one goal:
+Grumo Store is a **standalone, 100% Rust embedded application-state engine** built around one goal:
 
-> **A Voodoo application should be able to run robustly with Voodoo + Voodoo Store and no mandatory external infrastructure by default.**
+> **A Voodoo application should be able to run robustly with Voodoo + Grumo Store and no mandatory external infrastructure by default.**
 
 It is being built for the Voodoo ecosystem, but the core is not coupled to Voodoo Framework. The engine and `.vstore` format are designed to remain language-neutral and independently usable.
 
-**SQLite made the database a file. Voodoo Store aims to make application infrastructure a store.**
+**SQLite made the database a file. Grumo Store aims to make application infrastructure a store.**
 
 ## Status
 
 **Current Python binding line: v0.3.0. Core and bindings remain pre-1.0.**
 
-Voodoo Store is pre-1.0, but the Rust core and the published Python binding are already suitable for controlled single-node development and production experiments where the current compatibility and operational limits are understood. The **0.3 Native Surface Convergence** milestone is closed: the published binding exposes the supported native primitives directly to Python and Voodoo without depending on internal KV encodings.
+Grumo Store is pre-1.0, but the Rust core and the published Python binding are already suitable for controlled single-node development and production experiments where the current compatibility and operational limits are understood. The **0.3 Native Surface Convergence** milestone is closed: the published binding exposes the supported native primitives directly to Python and Voodoo without depending on internal KV encodings.
 
 The current engine includes:
 
@@ -34,7 +34,7 @@ The current engine includes:
 - durable Workflow/HITL state with waits, signals, timers and history;
 - verify, backup, create-only restore, logical snapshots and compact-copy;
 - structured health/storage accounting;
-- standalone `voodoo-store` CLI;
+- standalone `grumo-store` CLI;
 - C ABI v2 foundation with transactions, `last_error` and panic containment;
 - deterministic corruption, torn-write and process-crash testing;
 - CI across Format, Clippy, Linux, macOS, Windows and Rust 1.85 MSRV.
@@ -53,7 +53,7 @@ cargo test --workspace
 Run the executable application-state example:
 
 ```bash
-cargo run -p voodoo-store-core --example application_state -- application.vstore
+cargo run -p grumo-store-core --example application_state -- application.vstore
 ```
 
 The example commits application state, a durable Job and an Outbox Event through one transaction:
@@ -100,7 +100,7 @@ Applications / Frameworks
         |
 Stable APIs / bindings
         |
-voodoo-store-core
+grumo-store-core
         |
         +-- Data: KV / TTL / Collections / Indexes
         +-- Work: Queues / Jobs / Scheduler / Cron / Triggers
@@ -124,12 +124,12 @@ The Store persists durable semantics. Voodoo Runtime executes application code, 
 
 ## Cross-domain transactions
 
-A major Voodoo Store goal is to remove the split-brain normally created by a database plus external work infrastructure.
+A major Grumo Store goal is to remove the split-brain normally created by a database plus external work infrastructure.
 
 Current typed transaction primitives already allow application state, Jobs, Outbox Events and durable RPC Requests to share a Store transaction.
 
 ```rust
-use voodoo_store_core::{JobSpec, Store};
+use grumo_store_core::{JobSpec, Store};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut store = Store::open("application.vstore")?;
@@ -150,7 +150,7 @@ The public cross-domain transaction surface will continue expanding to additiona
 ## Durability
 
 ```rust
-use voodoo_store_core::{Durability, Store, StoreOptions};
+use grumo_store_core::{Durability, Store, StoreOptions};
 
 let store = Store::open_with_options(
     "application.vstore",
@@ -168,7 +168,7 @@ let store = Store::open_with_options(
 Only an incomplete physical tail is automatically repairable. Corruption inside the durable prefix is surfaced as an error rather than silently discarded.
 
 The CLI keeps repair explicit and read-only by default. Run
-`voodoo-store repair <path>` to inspect a torn tail; after taking a backup,
+`grumo-store repair <path>` to inspect a torn tail; after taking a backup,
 repeat with `--confirm-torn-tail` to authorize truncation. The command verifies
 the store again after repair. It never attempts to rewrite corruption inside a
 previously valid durable prefix.
@@ -189,7 +189,7 @@ Pin the exact Store version and keep backups for important pre-1.0 stores.
 Python operators can create a verified JSON sidecar alongside a backup:
 
 ```python
-from voodoo_store import create_backup_manifest, verify_backup_manifest
+from grumo_store import create_backup_manifest, verify_backup_manifest
 
 manifest = create_backup_manifest(store, "application.backup.vstore")
 verify_backup_manifest("application.backup.vstore", "application.backup.vstore.manifest.json")
@@ -219,38 +219,38 @@ Store Studio and distributed operation are later milestones and do not block con
 
 ## CLI
 
-The workspace includes the standalone `voodoo-store` binary. Examples:
+The workspace includes the standalone `grumo-store` binary. Examples:
 
 ```bash
-cargo run -p voodoo-store-cli -- put application.vstore hello world
-cargo run -p voodoo-store-cli -- get application.vstore hello
-cargo run -p voodoo-store-cli -- health application.vstore
-cargo run -p voodoo-store-cli -- verify application.vstore
-cargo run -p voodoo-store-cli -- backup application.vstore application.backup.vstore
+cargo run -p grumo-store-cli -- put application.vstore hello world
+cargo run -p grumo-store-cli -- get application.vstore hello
+cargo run -p grumo-store-cli -- health application.vstore
+cargo run -p grumo-store-cli -- verify application.vstore
+cargo run -p grumo-store-cli -- backup application.vstore application.backup.vstore
 ```
 
 The CLI also exposes lifecycle, Queue, Collection, Messaging, Object, Job, Scheduler, Cron, Trigger and Workflow operations. See `docs/QUICKSTART.md` for usage guidance.
 
 ## C ABI
 
-`voodoo-store-ffi` is the portability foundation for non-Rust bindings. The current ABI includes Store handles, KV operations, buffered transactions, thread-local `last_error` reporting and panic containment. The checked-in C consumer (`crates/voodoo-store-ffi/examples/c_consumer.c`) is compiled and executed by CI and release preflight; higher-level primitive coverage is still expanding.
+`grumo-store-ffi` is the portability foundation for non-Rust bindings. The current ABI includes Store handles, KV operations, buffered transactions, thread-local `last_error` reporting and panic containment. The checked-in C consumer (`crates/grumo-store-ffi/examples/c_consumer.c`) is compiled and executed by CI and release preflight; higher-level primitive coverage is still expanding.
 
 Public header:
 
 ```text
-include/voodoo_store.h
+include/grumo_store.h
 ```
 
 ## Workspace
 
 ```text
 crates/
-  voodoo-store-core/   # correctness-critical embedded engine
-  voodoo-store-ffi/    # C ABI portability layer
-  voodoo-store-cli/    # standalone inspection and operation CLI
+  grumo-store-core/   # correctness-critical embedded engine
+  grumo-store-ffi/    # C ABI portability layer
+  grumo-store-cli/    # standalone inspection and operation CLI
 
 include/
-  voodoo_store.h
+  grumo_store.h
 
 examples/
   c_consumer.c       # committed ABI consumer smoke
@@ -277,11 +277,11 @@ Execution / HITL   -> Store Workflow state
 Runtime Identity   -> durable state persisted through Store
 ```
 
-Identity/Auth semantics remain in Voodoo Runtime, not in Voodoo Store.
+Identity/Auth semantics remain in Voodoo Runtime, not in Grumo Store.
 
 ## Compatibility principle
 
-The lowest-level durable contract is bytes. Voodoo Store does not persist host-specific Python pickle, Java serialization, V8 objects or Go gob as its core format. Typed codecs and schemas are layered above the engine so a compatible Store can be accessed from multiple runtimes.
+The lowest-level durable contract is bytes. Grumo Store does not persist host-specific Python pickle, Java serialization, V8 objects or Go gob as its core format. Typed codecs and schemas are layered above the engine so a compatible Store can be accessed from multiple runtimes.
 
 ## Development principle
 

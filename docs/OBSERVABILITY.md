@@ -1,7 +1,7 @@
 # Store observability contract
 
 `docs/OBSERVABILITY_CONTRACT.json` is the retained dashboard and alert
-contract for Voodoo Store operations. The portable deployable dashboard is
+contract for Grumo Store operations. The portable deployable dashboard is
 checked in as `docs/OBSERVABILITY_DASHBOARD.json`; it intentionally describes signals from
 the public `health_report()` surface rather than reaching into private file or
 queue encodings. The same names are exposed by the Rust health report, the

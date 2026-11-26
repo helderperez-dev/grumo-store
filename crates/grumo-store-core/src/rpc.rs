@@ -371,7 +371,7 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        std::env::temp_dir().join(format!("voodoo-store-rpc-{name}-{nonce}.vstore"))
+        std::env::temp_dir().join(format!("grumo-store-rpc-{name}-{nonce}.vstore"))
     }
 
     #[test]

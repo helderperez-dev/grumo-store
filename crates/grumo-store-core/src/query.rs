@@ -234,7 +234,7 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        std::env::temp_dir().join(format!("voodoo-store-query-{name}-{nonce}.vstore"))
+        std::env::temp_dir().join(format!("grumo-store-query-{name}-{nonce}.vstore"))
     }
 
     fn setup_store(path: &PathBuf) -> Store {

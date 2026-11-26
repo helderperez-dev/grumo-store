@@ -295,7 +295,7 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        std::env::temp_dir().join(format!("voodoo-store-messaging-{name}-{nonce}.vstore"))
+        std::env::temp_dir().join(format!("grumo-store-messaging-{name}-{nonce}.vstore"))
     }
 
     #[test]

@@ -249,7 +249,7 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        std::env::temp_dir().join(format!("voodoo-store-outbox-{name}-{nonce}.vstore"))
+        std::env::temp_dir().join(format!("grumo-store-outbox-{name}-{nonce}.vstore"))
     }
 
     #[test]

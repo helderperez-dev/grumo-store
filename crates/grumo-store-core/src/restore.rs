@@ -1,4 +1,4 @@
-//! Verified restore workflow for Voodoo Store files.
+//! Verified restore workflow for Grumo Store files.
 //!
 //! Restore is deliberately create-only in this first version: an existing
 //! destination is never overwritten. This keeps restore failure semantics
@@ -117,7 +117,7 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        std::env::temp_dir().join(format!("voodoo-store-restore-{name}-{nonce}.vstore"))
+        std::env::temp_dir().join(format!("grumo-store-restore-{name}-{nonce}.vstore"))
     }
 
     #[test]

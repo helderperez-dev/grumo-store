@@ -1,4 +1,4 @@
-//! Verified logical snapshots for Voodoo Store.
+//! Verified logical snapshots for Grumo Store.
 //!
 //! A snapshot is a create-only compact representation of the currently visible
 //! committed state. It is an independent store and therefore receives its own
@@ -69,7 +69,7 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        std::env::temp_dir().join(format!("voodoo-store-snapshot-{name}-{nonce}.vstore"))
+        std::env::temp_dir().join(format!("grumo-store-snapshot-{name}-{nonce}.vstore"))
     }
 
     #[test]

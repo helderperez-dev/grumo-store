@@ -1,6 +1,6 @@
 //! Durable trigger metadata and trigger-to-job routing.
 //!
-//! Triggers describe *when* durable work should be enqueued. Voodoo Store
+//! Triggers describe *when* durable work should be enqueued. Grumo Store
 //! persists definitions and routes fires into durable jobs, but never executes
 //! application code or evaluates application-specific predicates.
 
@@ -439,7 +439,7 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        std::env::temp_dir().join(format!("voodoo-store-trigger-{name}-{nonce}.vstore"))
+        std::env::temp_dir().join(format!("grumo-store-trigger-{name}-{nonce}.vstore"))
     }
 
     #[test]

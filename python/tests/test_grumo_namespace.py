@@ -70,3 +70,18 @@ def test_native_module_cutover_preserves_legacy_imports() -> None:
     assert new_native.Store is legacy_native.Store
     assert new_native.Transaction is legacy_native.Transaction
     assert new_native.VoodooStoreError is legacy_native.VoodooStoreError
+
+
+def test_both_import_orders_in_fresh_interpreters() -> None:
+    import subprocess
+    import sys
+
+    for order in ("voodoo_store,grumo_store", "grumo_store,voodoo_store"):
+        first, second = order.split(",")
+        code = (
+            f"import {first}; import {second}; "
+            "import voodoo_store, grumo_store; "
+            "assert grumo_store.Store is voodoo_store.Store; "
+            "assert grumo_store.create_backup_manifest is voodoo_store.create_backup_manifest"
+        )
+        subprocess.run([sys.executable, "-c", code], check=True)

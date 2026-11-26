@@ -1,7 +1,7 @@
 use std::error::Error;
 use std::process::ExitCode;
 
-use voodoo_store_core::{
+use grumo_store_core::{
     CollectionDefinition, IndexDefinition, IndexValue, JobSpec, PushOptions, ScheduleMode, Store,
     StoreOptions, TriggerSource,
 };
@@ -10,7 +10,7 @@ fn main() -> ExitCode {
     match run() {
         Ok(()) => ExitCode::SUCCESS,
         Err(error) => {
-            eprintln!("voodoo-store: {error}");
+            eprintln!("grumo-store: {error}");
             ExitCode::FAILURE
         }
     }
@@ -565,7 +565,7 @@ fn verify(args: &[String]) -> Result<(), Box<dyn Error>> {
 
 fn repair(args: &[String]) -> Result<(), Box<dyn Error>> {
     if args.len() < 3 || args.len() > 4 {
-        return Err("usage: voodoo-store repair <store> [--confirm-torn-tail]".into());
+        return Err("usage: grumo-store repair <store> [--confirm-torn-tail]".into());
     }
     let path = &args[2];
     let before = Store::verify(path)?;
@@ -598,7 +598,7 @@ fn repair(args: &[String]) -> Result<(), Box<dyn Error>> {
 
 fn collection_create(args: &[String]) -> Result<(), Box<dyn Error>> {
     if args.len() < 4 || args.len() > 5 {
-        return Err("usage: voodoo-store collection-create <store> <collection> [codec]".into());
+        return Err("usage: grumo-store collection-create <store> <collection> [codec]".into());
     }
     let mut store = Store::open(&args[2])?;
     let definition = CollectionDefinition {
@@ -617,7 +617,7 @@ fn collection_create(args: &[String]) -> Result<(), Box<dyn Error>> {
 fn collection_index(args: &[String]) -> Result<(), Box<dyn Error>> {
     if args.len() < 5 || args.len() > 6 {
         return Err(
-            "usage: voodoo-store collection-index <store> <collection> <index> [unique]".into(),
+            "usage: grumo-store collection-index <store> <collection> <index> [unique]".into(),
         );
     }
     let unique = args.get(5).is_some_and(|value| value == "unique");
@@ -637,7 +637,7 @@ fn collection_index(args: &[String]) -> Result<(), Box<dyn Error>> {
 
 fn collection_put(args: &[String]) -> Result<(), Box<dyn Error>> {
     if args.len() < 6 {
-        return Err("usage: voodoo-store collection-put <store> <collection> <pk> <value> [index=value ...]".into());
+        return Err("usage: grumo-store collection-put <store> <collection> <pk> <value> [index=value ...]".into());
     }
     let indexes = args[6..]
         .iter()
@@ -695,7 +695,7 @@ fn collection_query(args: &[String]) -> Result<(), Box<dyn Error>> {
 fn queue_push(args: &[String]) -> Result<(), Box<dyn Error>> {
     if args.len() < 5 || args.len() > 7 {
         return Err(
-            "usage: voodoo-store queue-push <store> <queue> <payload> [available_at_ms] [priority]"
+            "usage: grumo-store queue-push <store> <queue> <payload> [available_at_ms] [priority]"
                 .into(),
         );
     }
@@ -815,7 +815,7 @@ fn require_len(args: &[String], expected: usize) -> Result<(), Box<dyn Error>> {
     if args.len() == expected {
         Ok(())
     } else {
-        Err("invalid arguments; run `voodoo-store help` for usage".into())
+        Err("invalid arguments; run `grumo-store help` for usage".into())
     }
 }
 
@@ -850,7 +850,7 @@ fn hex(bytes: &[u8]) -> String {
 
 fn print_usage() {
     println!(
-        "Voodoo Store 0.1\n\
+        "Grumo Store 0.1\n\
          \n\
          Core: put get delete health inspect verify repair backup restore-copy compact-copy snapshot\n\
          TTL: ttl-put ttl-get-at ttl-clear ttl-purge\n\

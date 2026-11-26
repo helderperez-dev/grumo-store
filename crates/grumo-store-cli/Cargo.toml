@@ -1,5 +1,5 @@
 [package]
-name = "voodoo-store-cli"
+name = "grumo-store-cli"
 version = "1.0.0"
 edition.workspace = true
 license.workspace = true
@@ -7,8 +7,8 @@ repository.workspace = true
 rust-version.workspace = true
 
 [[bin]]
-name = "voodoo-store"
+name = "grumo-store"
 path = "src/main.rs"
 
 [dependencies]
-voodoo-store-core = { path = "../voodoo-store-core" }
+grumo-store-core = { path = "../grumo-store-core" }

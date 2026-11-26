@@ -1,5 +1,5 @@
-#ifndef VOODOO_STORE_H
-#define VOODOO_STORE_H
+#ifndef GRUMO_STORE_H
+#define GRUMO_STORE_H
 
 #include <stddef.h>
 #include <stdint.h>

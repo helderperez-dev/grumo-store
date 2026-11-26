@@ -4,7 +4,7 @@ use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::ptr;
 use std::slice;
 
-use voodoo_store_core::Store;
+use grumo_store_core::Store;
 
 pub const VDS_OK: i32 = 0;
 pub const VDS_NOT_FOUND: i32 = 1;
@@ -40,7 +40,7 @@ pub extern "C" fn vds_abi_version() -> u32 {
     2
 }
 
-/// Copies the calling thread's last Voodoo Store FFI error into caller-owned memory.
+/// Copies the calling thread's last Grumo Store FFI error into caller-owned memory.
 ///
 /// `out_len` is set to the required byte count excluding any NUL terminator. The
 /// returned message is UTF-8 but is not NUL-terminated.
@@ -73,7 +73,7 @@ pub unsafe extern "C" fn vds_last_error_message(
     })
 }
 
-/// Opens or creates a Voodoo Store file.
+/// Opens or creates a Grumo Store file.
 ///
 /// # Safety
 /// `path` must point to a valid NUL-terminated UTF-8 string and `out_handle`
@@ -356,7 +356,7 @@ fn ffi_guard(operation: impl FnOnce() -> i32) -> i32 {
     match catch_unwind(AssertUnwindSafe(operation)) {
         Ok(status) => status,
         Err(_) => {
-            set_last_error("panic caught at Voodoo Store C ABI boundary");
+            set_last_error("panic caught at Grumo Store C ABI boundary");
             VDS_PANIC
         }
     }

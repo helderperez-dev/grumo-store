@@ -1,4 +1,4 @@
-#include "voodoo_store.h"
+#include "grumo_store.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -23,6 +23,6 @@ int main(void) {
 
     vds_close(store);
     remove(path);
-    puts("voodoo-store C consumer passed");
+    puts("grumo-store C consumer passed");
     return 0;
 }

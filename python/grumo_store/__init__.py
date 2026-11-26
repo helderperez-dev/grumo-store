@@ -13,7 +13,7 @@ from ._native import (
     Transaction,
     TransactionFinishedError,
     VerificationReport,
-    VoodooStoreError,
+    GrumoStoreError,
     __version__,
 )
 from .backup import create_backup_manifest, verify_backup_manifest
@@ -33,7 +33,7 @@ __all__ = [
     "Transaction",
     "TransactionFinishedError",
     "VerificationReport",
-    "VoodooStoreError",
+    "GrumoStoreError",
     "create_backup_manifest",
     "verify_backup_manifest",
     "MigrationConflict",

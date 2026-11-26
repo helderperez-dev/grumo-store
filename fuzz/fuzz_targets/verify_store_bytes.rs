@@ -4,7 +4,7 @@ use std::io::Write;
 
 use libfuzzer_sys::fuzz_target;
 use tempfile::NamedTempFile;
-use voodoo_store_core::Store;
+use grumo_store_core::Store;
 
 fuzz_target!(|bytes: &[u8]| {
     let Ok(mut file) = NamedTempFile::new() else {

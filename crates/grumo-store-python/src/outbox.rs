@@ -1,17 +1,17 @@
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict};
-use voodoo_store_core::{OutboxError, OutboxEvent, OutboxEventId};
+use grumo_store_core::{OutboxError, OutboxEvent, OutboxEventId};
 
-use super::{PyStore, VoodooStoreError, with_store, with_store_mut};
+use super::{PyStore, GrumoStoreError, with_store, with_store_mut};
 
 fn map_error(error: OutboxError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn parse_id(tx_id: u64, nonce: &[u8]) -> PyResult<OutboxEventId> {
     let nonce = nonce
         .try_into()
-        .map_err(|_| VoodooStoreError::new_err("outbox nonce must be exactly 16 bytes"))?;
+        .map_err(|_| GrumoStoreError::new_err("outbox nonce must be exactly 16 bytes"))?;
     Ok(OutboxEventId { tx_id, nonce })
 }
 

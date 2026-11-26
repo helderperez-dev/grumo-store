@@ -2,28 +2,28 @@ use std::path::PathBuf;
 
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict, PyList};
-use voodoo_store_core::{
+use grumo_store_core::{
     CheckpointError, CheckpointReport, CompactionReport, GenerationError, GenerationReport,
     HealthReport, OperationsError, RestoreReport, SnapshotError, SnapshotReport, StorageStats,
     Store as CoreStore,
 };
 
-use super::{PyStore, VoodooStoreError, map_engine_error, with_store};
+use super::{PyStore, GrumoStoreError, map_engine_error, with_store};
 
 fn map_operations_error(error: OperationsError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn map_checkpoint_error(error: CheckpointError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn map_snapshot_error(error: SnapshotError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn map_generation_error(error: GenerationError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn py_storage_stats(py: Python<'_>, stats: StorageStats) -> PyResult<Py<PyDict>> {

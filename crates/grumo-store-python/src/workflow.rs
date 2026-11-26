@@ -1,19 +1,19 @@
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict};
-use voodoo_store_core::{
+use grumo_store_core::{
     WorkflowError, WorkflowHistoryEntry, WorkflowHistoryKind, WorkflowId, WorkflowInstance,
     WorkflowStatus, WorkflowWait,
 };
 
-use super::{PyStore, VoodooStoreError, with_store, with_store_mut};
+use super::{PyStore, GrumoStoreError, with_store, with_store_mut};
 
 fn map_error(error: WorkflowError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn parse_id(id: &[u8]) -> PyResult<WorkflowId> {
     id.try_into()
-        .map_err(|_| VoodooStoreError::new_err("workflow id must be exactly 16 bytes"))
+        .map_err(|_| GrumoStoreError::new_err("workflow id must be exactly 16 bytes"))
 }
 
 fn parse_optional_id(id: Option<Vec<u8>>) -> PyResult<Option<WorkflowId>> {

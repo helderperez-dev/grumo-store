@@ -1,16 +1,16 @@
 use pyo3::prelude::*;
-use voodoo_store_core::JobSpec;
+use grumo_store_core::JobSpec;
 
-use super::{PendingOperation, PyTransaction, VoodooStoreError};
+use super::{PendingOperation, PyTransaction, GrumoStoreError};
 
 fn parse_object_id(id: &[u8]) -> PyResult<[u8; 32]> {
     id.try_into()
-        .map_err(|_| VoodooStoreError::new_err("object id must be exactly 32 bytes"))
+        .map_err(|_| GrumoStoreError::new_err("object id must be exactly 32 bytes"))
 }
 
 fn parse_workflow_id(id: &[u8]) -> PyResult<[u8; 16]> {
     id.try_into()
-        .map_err(|_| VoodooStoreError::new_err("workflow id must be exactly 16 bytes"))
+        .map_err(|_| GrumoStoreError::new_err("workflow id must be exactly 16 bytes"))
 }
 
 fn parse_optional_workflow_id(id: Option<Vec<u8>>) -> PyResult<Option<[u8; 16]>> {

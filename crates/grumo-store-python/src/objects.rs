@@ -1,16 +1,16 @@
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict};
-use voodoo_store_core::{ObjectError, ObjectId};
+use grumo_store_core::{ObjectError, ObjectId};
 
-use super::{PyStore, VoodooStoreError, with_store, with_store_mut};
+use super::{PyStore, GrumoStoreError, with_store, with_store_mut};
 
 fn map_object_error(error: ObjectError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn parse_object_id(id: &[u8]) -> PyResult<ObjectId> {
     id.try_into()
-        .map_err(|_| VoodooStoreError::new_err("object id must be exactly 32 bytes"))
+        .map_err(|_| GrumoStoreError::new_err("object id must be exactly 32 bytes"))
 }
 
 #[pymethods]

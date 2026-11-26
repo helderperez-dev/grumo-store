@@ -6,18 +6,18 @@ use pyo3::create_exception;
 use pyo3::exceptions::{PyException, PyRuntimeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict, PyModule};
-use voodoo_store_core::{Durability, EngineError, JobSpec, Store, StoreOptions, VerificationReport};
+use grumo_store_core::{Durability, EngineError, JobSpec, Store, StoreOptions, VerificationReport};
 
-create_exception!(_native, VoodooStoreError, PyException);
-create_exception!(_native, StoreClosedError, VoodooStoreError);
-create_exception!(_native, StoreBusyError, VoodooStoreError);
-create_exception!(_native, AlreadyOpenError, VoodooStoreError);
-create_exception!(_native, ReservedKeyError, VoodooStoreError);
-create_exception!(_native, TransactionFinishedError, VoodooStoreError);
-create_exception!(_native, CorruptionError, VoodooStoreError);
-create_exception!(_native, IoError, VoodooStoreError);
-create_exception!(_native, DiskFullError, VoodooStoreError);
-create_exception!(_native, NamespaceQuotaError, VoodooStoreError);
+create_exception!(_native, GrumoStoreError, PyException);
+create_exception!(_native, StoreClosedError, GrumoStoreError);
+create_exception!(_native, StoreBusyError, GrumoStoreError);
+create_exception!(_native, AlreadyOpenError, GrumoStoreError);
+create_exception!(_native, ReservedKeyError, GrumoStoreError);
+create_exception!(_native, TransactionFinishedError, GrumoStoreError);
+create_exception!(_native, CorruptionError, GrumoStoreError);
+create_exception!(_native, IoError, GrumoStoreError);
+create_exception!(_native, DiskFullError, GrumoStoreError);
+create_exception!(_native, NamespaceQuotaError, GrumoStoreError);
 
 #[derive(Debug)]
 enum StoreSlot {
@@ -228,7 +228,7 @@ enum PendingOperation {
         collection: Vec<u8>,
         primary_key: Vec<u8>,
         value: Vec<u8>,
-        indexes: Vec<voodoo_store_core::IndexValue>,
+        indexes: Vec<grumo_store_core::IndexValue>,
     },
     DeleteRecord {
         collection: Vec<u8>,
@@ -519,7 +519,7 @@ impl PyTransaction {
                         indexes,
                     } => {
                         tx.upsert_record(collection, primary_key, value, indexes)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         None
                     }
                     PendingOperation::DeleteRecord {
@@ -527,13 +527,13 @@ impl PyTransaction {
                         primary_key,
                     } => {
                         tx.delete_record(collection, primary_key)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         None
                     }
                     PendingOperation::EnqueueJob { spec, now_ms } => {
                         let id = tx
                             .enqueue_job(spec.clone(), *now_ms)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         Some(OperationResult::JobId(id))
                     }
                     PendingOperation::PushQueue {
@@ -546,24 +546,24 @@ impl PyTransaction {
                             .push_queue(
                                 queue,
                                 payload,
-                                voodoo_store_core::PushOptions {
+                                grumo_store_core::PushOptions {
                                     available_at_ms: *available_at_ms,
                                     priority: *priority,
                                 },
                             )
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         Some(OperationResult::QueueId(id))
                     }
                     PendingOperation::AppendStream { stream, payload } => {
                         let offset = tx
                             .append_stream(stream, payload)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         Some(OperationResult::StreamOffset(offset))
                     }
                     PendingOperation::PublishTopic { topic, payload } => {
                         let offset = tx
                             .publish_topic(topic, payload)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         Some(OperationResult::TopicOffset(offset))
                     }
                     PendingOperation::EmitEvent {
@@ -573,7 +573,7 @@ impl PyTransaction {
                     } => {
                         let id = tx
                             .emit_event(topic, payload, *created_at_ms)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         Some(OperationResult::OutboxId {
                             tx_id: id.tx_id,
                             nonce: id.nonce,
@@ -582,7 +582,7 @@ impl PyTransaction {
                     PendingOperation::PutObject { content } => {
                         let id = tx
                             .put_object(content)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         Some(OperationResult::ObjectId(id))
                     }
                     PendingOperation::PutLinkedObject {
@@ -592,9 +592,9 @@ impl PyTransaction {
                     } => {
                         let id = tx
                             .put_object(content)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         tx.link_object(namespace, name, &id)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         Some(OperationResult::ObjectId(id))
                     }
                     PendingOperation::LinkObject {
@@ -603,13 +603,13 @@ impl PyTransaction {
                         id,
                     } => {
                         tx.link_object(namespace, name, id)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         None
                     }
                     PendingOperation::UnlinkObject { namespace, name } => {
                         let removed = tx
                             .unlink_object(namespace, name)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         Some(OperationResult::ObjectUnlinked(removed))
                     }
                     PendingOperation::RequestRpc {
@@ -620,7 +620,7 @@ impl PyTransaction {
                     } => {
                         let id = tx
                             .request_rpc(method, payload, *created_at_ms, *deadline_ms)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         Some(OperationResult::RpcId {
                             tx_id: id.tx_id,
                             nonce: id.nonce,
@@ -641,7 +641,7 @@ impl PyTransaction {
                                 *parent_id,
                                 *now_ms,
                             )
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         Some(OperationResult::WorkflowId(id))
                     }
                     PendingOperation::SetWorkflowStep {
@@ -651,12 +651,12 @@ impl PyTransaction {
                         now_ms,
                     } => {
                         tx.set_workflow_step(id, step, state, *now_ms)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         None
                     }
                     PendingOperation::WaitForSignal { id, signal, now_ms } => {
                         tx.wait_for_signal(id, signal, *now_ms)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         None
                     }
                     PendingOperation::SignalWorkflow {
@@ -667,7 +667,7 @@ impl PyTransaction {
                     } => {
                         let signaled = tx
                             .signal_workflow(id, signal, payload, *now_ms)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         Some(OperationResult::WorkflowSignaled(signaled))
                     }
                     PendingOperation::WaitUntil {
@@ -676,7 +676,7 @@ impl PyTransaction {
                         now_ms,
                     } => {
                         tx.wait_until(id, *resume_at_ms, *now_ms)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         None
                     }
                     PendingOperation::CompleteWorkflow {
@@ -685,18 +685,18 @@ impl PyTransaction {
                         now_ms,
                     } => {
                         tx.complete_workflow(id, final_state, *now_ms)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         None
                     }
                     PendingOperation::FailWorkflow { id, error, now_ms } => {
                         tx.fail_workflow(id, error, *now_ms)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         None
                     }
                     PendingOperation::CancelWorkflow { id, reason, now_ms } => {
                         let cancelled = tx
                             .cancel_workflow(id, reason, *now_ms)
-                            .map_err(|error| VoodooStoreError::new_err(error.to_string()))?;
+                            .map_err(|error| GrumoStoreError::new_err(error.to_string()))?;
                         Some(OperationResult::WorkflowCancelled(cancelled))
                     }
                 };
@@ -829,7 +829,7 @@ fn parse_durability(value: &str) -> PyResult<Durability> {
 
 fn lock_slot(slot: &Arc<Mutex<StoreSlot>>) -> PyResult<MutexGuard<'_, StoreSlot>> {
     slot.lock()
-        .map_err(|_| PyRuntimeError::new_err("Voodoo Store binding lock was poisoned"))
+        .map_err(|_| PyRuntimeError::new_err("Grumo Store binding lock was poisoned"))
 }
 
 fn with_store<T>(
@@ -876,7 +876,7 @@ fn map_engine_error(error: EngineError) -> PyErr {
         | EngineError::InvalidOperationPayload
         | EngineError::NonMonotonicSequence { .. }
         | EngineError::RecordAfterCommit(_) => CorruptionError::new_err(message),
-        _ => VoodooStoreError::new_err(message),
+        _ => GrumoStoreError::new_err(message),
     }
 }
 
@@ -885,7 +885,7 @@ fn _native(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<PyStore>()?;
     module.add_class::<PyTransaction>()?;
     module.add_class::<PyVerificationReport>()?;
-    module.add("VoodooStoreError", module.py().get_type::<VoodooStoreError>())?;
+    module.add("GrumoStoreError", module.py().get_type::<GrumoStoreError>())?;
     module.add("StoreClosedError", module.py().get_type::<StoreClosedError>())?;
     module.add("StoreBusyError", module.py().get_type::<StoreBusyError>())?;
     module.add("AlreadyOpenError", module.py().get_type::<AlreadyOpenError>())?;

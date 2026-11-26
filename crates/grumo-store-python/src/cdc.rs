@@ -1,11 +1,11 @@
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict};
-use voodoo_store_core::{ChangeFeedError, ChangeKind, ChangeRecord};
+use grumo_store_core::{ChangeFeedError, ChangeKind, ChangeRecord};
 
-use super::{PyStore, VoodooStoreError, with_store, with_store_mut};
+use super::{PyStore, GrumoStoreError, with_store, with_store_mut};
 
 fn map_error(error: ChangeFeedError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn py_change(py: Python<'_>, change: ChangeRecord) -> PyResult<Py<PyDict>> {

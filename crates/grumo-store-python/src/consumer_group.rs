@@ -1,11 +1,11 @@
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict};
-use voodoo_store_core::{ConsumerGroupDelivery, ConsumerGroupError, ConsumerGroupState};
+use grumo_store_core::{ConsumerGroupDelivery, ConsumerGroupError, ConsumerGroupState};
 
-use super::{PyStore, VoodooStoreError, with_store, with_store_mut};
+use super::{PyStore, GrumoStoreError, with_store, with_store_mut};
 
 fn map_error(error: ConsumerGroupError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn py_state(py: Python<'_>, state: ConsumerGroupState) -> PyResult<Py<PyDict>> {

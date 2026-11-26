@@ -1,16 +1,16 @@
 use pyo3::prelude::*;
 use pyo3::types::PyBytes;
-use voodoo_store_core::MessagingError;
+use grumo_store_core::MessagingError;
 
-use super::{PyStore, VoodooStoreError, with_store_mut};
+use super::{PyStore, GrumoStoreError, with_store_mut};
 
 type PyStreamEntry = (u64, Py<PyBytes>);
 
 fn map_messaging_error(error: MessagingError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
-fn py_entries(py: Python<'_>, entries: Vec<voodoo_store_core::StreamEntry>) -> Vec<PyStreamEntry> {
+fn py_entries(py: Python<'_>, entries: Vec<grumo_store_core::StreamEntry>) -> Vec<PyStreamEntry> {
     entries
         .into_iter()
         .map(|entry| (entry.offset, PyBytes::new(py, &entry.payload).unbind()))

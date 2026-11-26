@@ -1,11 +1,11 @@
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict};
-use voodoo_store_core::{PushOptions, QueueError, QueueMessage};
+use grumo_store_core::{PushOptions, QueueError, QueueMessage};
 
-use super::{PyStore, VoodooStoreError, with_store_mut};
+use super::{PyStore, GrumoStoreError, with_store_mut};
 
 fn map_error(error: QueueError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn py_message(py: Python<'_>, message: QueueMessage) -> PyResult<Py<PyDict>> {

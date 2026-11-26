@@ -1,23 +1,23 @@
 use pyo3::prelude::*;
 use pyo3::types::PyBytes;
-use voodoo_store_core::{
+use grumo_store_core::{
     CollectionDefinition, CollectionError, CollectionRecord, IndexDefinition, IndexRangeQuery,
     IndexValue, QueryBound, QueryError, QueryOrder,
 };
 
 use super::{
-    PendingOperation, PyStore, PyTransaction, VoodooStoreError, with_store, with_store_mut,
+    PendingOperation, PyStore, PyTransaction, GrumoStoreError, with_store, with_store_mut,
 };
 
 type PyRecord = (Py<PyBytes>, Py<PyBytes>, Vec<(Py<PyBytes>, Py<PyBytes>)>);
 type PyIndexedRecord = (Py<PyBytes>, PyRecord);
 
 fn map_collection_error(error: CollectionError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn map_query_error(error: QueryError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn py_record(py: Python<'_>, record: CollectionRecord) -> PyRecord {

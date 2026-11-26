@@ -1,17 +1,17 @@
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict};
-use voodoo_store_core::{RpcError, RpcRequest, RpcRequestId, RpcResponse};
+use grumo_store_core::{RpcError, RpcRequest, RpcRequestId, RpcResponse};
 
-use super::{PyStore, VoodooStoreError, with_store, with_store_mut};
+use super::{PyStore, GrumoStoreError, with_store, with_store_mut};
 
 fn map_error(error: RpcError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn parse_id(tx_id: u64, nonce: &[u8]) -> PyResult<RpcRequestId> {
     let nonce = nonce
         .try_into()
-        .map_err(|_| VoodooStoreError::new_err("RPC nonce must be exactly 16 bytes"))?;
+        .map_err(|_| GrumoStoreError::new_err("RPC nonce must be exactly 16 bytes"))?;
     Ok(RpcRequestId { tx_id, nonce })
 }
 

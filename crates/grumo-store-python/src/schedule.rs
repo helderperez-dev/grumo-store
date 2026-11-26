@@ -1,19 +1,19 @@
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict};
-use voodoo_store_core::{
+use grumo_store_core::{
     CronSchedulerError, DurableCronSchedule, DurableSchedule, DurableTrigger, JobSpec,
     ScheduleMode, TriggerError, TriggerSource,
 };
 
-use super::{PyStore, VoodooStoreError, with_store, with_store_mut};
+use super::{PyStore, GrumoStoreError, with_store, with_store_mut};
 
 fn map_error(error: impl std::fmt::Display) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn parse_id(id: &[u8], kind: &str) -> PyResult<[u8; 16]> {
     id.try_into()
-        .map_err(|_| VoodooStoreError::new_err(format!("{kind} id must be exactly 16 bytes")))
+        .map_err(|_| GrumoStoreError::new_err(format!("{kind} id must be exactly 16 bytes")))
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -135,21 +135,21 @@ fn trigger_source(
         "manual" => Ok(TriggerSource::Manual),
         "collection" => Ok(TriggerSource::Collection {
             collection: source_name.ok_or_else(|| {
-                VoodooStoreError::new_err("collection trigger requires source_name")
+                GrumoStoreError::new_err("collection trigger requires source_name")
             })?,
             operation: operation.ok_or_else(|| {
-                VoodooStoreError::new_err("collection trigger requires operation")
+                GrumoStoreError::new_err("collection trigger requires operation")
             })?,
         }),
         "stream" => Ok(TriggerSource::Stream {
             stream: source_name
-                .ok_or_else(|| VoodooStoreError::new_err("stream trigger requires source_name"))?,
+                .ok_or_else(|| GrumoStoreError::new_err("stream trigger requires source_name"))?,
         }),
         "topic" => Ok(TriggerSource::Topic {
             topic: source_name
-                .ok_or_else(|| VoodooStoreError::new_err("topic trigger requires source_name"))?,
+                .ok_or_else(|| GrumoStoreError::new_err("topic trigger requires source_name"))?,
         }),
-        _ => Err(VoodooStoreError::new_err(
+        _ => Err(GrumoStoreError::new_err(
             "trigger source must be one of: manual, collection, stream, topic",
         )),
     }
@@ -191,11 +191,11 @@ impl PyStore {
             "once" => ScheduleMode::Once,
             "interval" => ScheduleMode::Interval {
                 every_ms: every_ms.ok_or_else(|| {
-                    VoodooStoreError::new_err("interval schedule requires every_ms")
+                    GrumoStoreError::new_err("interval schedule requires every_ms")
                 })?,
             },
             _ => {
-                return Err(VoodooStoreError::new_err(
+                return Err(GrumoStoreError::new_err(
                     "schedule mode must be 'once' or 'interval'",
                 ));
             }

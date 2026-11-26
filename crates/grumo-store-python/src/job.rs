@@ -1,16 +1,16 @@
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict};
-use voodoo_store_core::{
+use grumo_store_core::{
     DurableJob, DurableJobState, DurableJobStats, JobError, JobHistoryEntry, JobHistoryKind,
     JobSpec,
 };
 
-use super::{PyStore, VoodooStoreError, with_store, with_store_mut};
+use super::{PyStore, GrumoStoreError, with_store, with_store_mut};
 
 type PyHistory = (u64, i64, String, Py<PyBytes>);
 
 fn map_job_error(error: JobError) -> PyErr {
-    VoodooStoreError::new_err(error.to_string())
+    GrumoStoreError::new_err(error.to_string())
 }
 
 fn state_name(state: DurableJobState) -> &'static str {
@@ -77,7 +77,7 @@ fn py_history(py: Python<'_>, entry: JobHistoryEntry) -> PyHistory {
 
 fn parse_job_id(id: &[u8]) -> PyResult<[u8; 16]> {
     id.try_into()
-        .map_err(|_| VoodooStoreError::new_err("job id must be exactly 16 bytes"))
+        .map_err(|_| GrumoStoreError::new_err("job id must be exactly 16 bytes"))
 }
 
 #[allow(clippy::too_many_arguments)]

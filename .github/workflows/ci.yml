@@ -5,6 +5,13 @@ on:
     branches: [main]
   pull_request:
 
+
+# A new commit supersedes queued/running CI for the same pull request.
+# Keep unrelated branches and the default-branch pipeline independent.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   # One-time lockfile refresh, restricted to this repository's migration PR.
   # The build-only GitHub token cannot trigger another workflow run; subsequent

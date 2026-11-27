@@ -4,13 +4,13 @@
 
 Grumo Store is an independent embedded application-state engine written in Rust.
 
-It is **not** a component that requires Voodoo Framework. Voodoo Framework is a first-class consumer of Grumo Store, but the engine must remain useful from Rust, C, C++, Python, JavaScript/TypeScript, Go, Java, Swift, Kotlin, .NET, and other runtimes.
+It is **not** a component that requires Grumo Framework. Grumo Framework is a first-class consumer of Grumo Store, but the engine must remain useful from Rust, C, C++, Python, JavaScript/TypeScript, Go, Java, Swift, Kotlin, .NET, and other runtimes.
 
 > The storage format and semantics belong to Grumo Store, not to any host language or framework.
 
-## Alignment with Voodoo
+## Alignment with Grumo
 
-Voodoo's runtime model is:
+Grumo's runtime model is:
 
 ```text
 Entity -> State -> Intent -> Capability -> Execution -> Effect -> State
@@ -19,7 +19,7 @@ Entity -> State -> Intent -> Capability -> Execution -> Effect -> State
 Grumo Store does not own or duplicate that ontology. It is the durable substrate beneath the pieces that need persistence, ordering, time, delivery, recovery, retention, or replay.
 
 ```text
-Voodoo Framework / Runtime
+Grumo Framework / Runtime
 
 Entity / State / Execution / Effect / Time / Event
                      |
@@ -49,11 +49,11 @@ If it primarily concerns **executing user code, HTTP, UI rendering, model infere
 
 Therefore:
 
-- Store persists execution state; Voodoo Runtime executes work.
+- Store persists execution state; Grumo Runtime executes work.
 - Store persists schedules; a worker/runtime dispatches handlers.
-- Store persists messages; Voodoo Mesh or another transport moves them between nodes.
-- Store may persist capability metadata; Voodoo Runtime evaluates authorization policy.
-- Store exposes change feeds; Voodoo UI decides how to render them.
+- Store persists messages; Grumo Mesh or another transport moves them between nodes.
+- Store may persist capability metadata; Grumo Runtime evaluates authorization policy.
+- Store exposes change feeds; Grumo UI decides how to render them.
 - Store stores workflow state; a workflow executor runs code steps.
 
 ## Layering
@@ -61,7 +61,7 @@ Therefore:
 ```text
 Applications
     |
-    +-- Voodoo Framework (Python)
+    +-- Grumo Framework (Python)
     +-- Python applications
     +-- Node.js / Bun / Deno
     +-- Go
@@ -110,7 +110,7 @@ Must not depend on:
 
 - Python
 - Node.js
-- Voodoo Framework
+- Grumo Framework
 - HTTP servers
 - model providers
 - a cloud provider
@@ -142,24 +142,24 @@ bindings/java    -> JNI/JNA/Panama
 bindings/dotnet  -> P/Invoke
 ```
 
-## Voodoo integration map
+## Grumo integration map
 
-Voodoo should be able to map its current provider protocols onto Store without changing application semantics:
+Grumo should be able to map its current provider protocols onto Store without changing application semantics:
 
 ```text
-Voodoo Model             -> Store Collections / Query
-VoodooDatabase           -> Store Data
-VoodooQueue / @task      -> Store Queue + Job
-Voodoo Scheduler         -> Store Time + Schedule
-VoodooEventBus / Mesh    -> Store Topic / Stream / Subscription
-Voodoo Execution         -> Store durable execution state
-VoodooObjectStore        -> Store Objects
-VoodooCache              -> Store KV + TTL
-Voodoo telemetry         -> Store trace/correlation metadata
+Grumo Model             -> Store Collections / Query
+GrumoDatabase           -> Store Data
+GrumoQueue / @task      -> Store Queue + Job
+Grumo Scheduler         -> Store Time + Schedule
+GrumoEventBus / Mesh    -> Store Topic / Stream / Subscription
+Grumo Execution         -> Store durable execution state
+GrumoObjectStore        -> Store Objects
+GrumoCache              -> Store KV + TTL
+Grumo telemetry         -> Store trace/correlation metadata
 HITL waiting             -> Store durable waiting state / signal
 ```
 
-The Voodoo adapter may add dependency injection, decorators, Python schemas, reactive UI integration, worker execution, automatic subscriptions, and development tooling. None of those may be required to open or operate a `.vstore` store.
+The Grumo adapter may add dependency injection, decorators, Python schemas, reactive UI integration, worker execution, automatic subscriptions, and development tooling. None of those may be required to open or operate a `.vstore` store.
 
 ## Capability domains
 
@@ -206,7 +206,7 @@ The Store must not make an unqualified generic `exactly once` claim. It should e
 
 ### Automation and time
 
-Time is a first-class storage dimension because the Voodoo runtime treats scheduling, retries, deadlines, waiting states and lifecycle as meaningful execution concerns.
+Time is a first-class storage dimension because the Grumo runtime treats scheduling, retries, deadlines, waiting states and lifecycle as meaningful execution concerns.
 
 Store should support durable representations for:
 
@@ -281,7 +281,7 @@ Feeds are storage primitives; UI/WebSocket behavior stays outside Store.
 - opaque capability/authorization metadata
 - key-rotation metadata
 
-Store does not become Voodoo's policy engine.
+Store does not become Grumo's policy engine.
 
 ### Operations
 
@@ -306,7 +306,7 @@ Future layers may add:
 - distributed leases
 - leader election
 - node identity
-- Voodoo Protocol integration
+- Grumo Protocol integration
 
 Consensus and global multi-writer transactions are deliberately deferred until local correctness is mature.
 
@@ -345,7 +345,7 @@ Store records should be able to carry opaque operational identifiers without und
 - parent execution ID
 - source/node ID
 
-This aligns with Voodoo's observability model while preserving Store independence.
+This aligns with Grumo's observability model while preserving Store independence.
 
 ## Compatibility contract
 
@@ -357,7 +357,7 @@ Python writes app.vstore
         +--> Rust reads it
         +--> Go reads it
         +--> Node reads it
-        +--> Voodoo Runtime reads it
+        +--> Grumo Runtime reads it
 ```
 
 No host-language serialization may leak into mandatory storage semantics. At the lowest layer keys and values are bytes. Higher-level codecs such as JSON, MessagePack, CBOR, Protobuf or schema-defined values are explicit layers above bytes.
@@ -386,7 +386,7 @@ Workflows, signals, waiting states, live queries and operational histories.
 
 ### Level 4: distributed state
 
-Sync, replication and Voodoo Protocol integration.
+Sync, replication and Grumo Protocol integration.
 
 Each level builds on lower-level invariants rather than bypassing them.
 
@@ -400,7 +400,7 @@ Each level builds on lower-level invariants rather than bypassing them.
 6. Topics, streams, subscriptions and change feeds.
 7. Objects and content addressing.
 8. Live queries and workflow persistence.
-9. Replication/sync and Voodoo Protocol integration.
+9. Replication/sync and Grumo Protocol integration.
 
 Every layer must preserve published invariants and have crash/fault tests before becoming a dependency of the next layer.
 
@@ -408,7 +408,7 @@ Every layer must preserve published invariants and have crash/fault tests before
 
 Before a feature is merged, ask:
 
-1. Can it work without Voodoo Framework?
+1. Can it work without Grumo Framework?
 2. Is its durable representation language-neutral?
 3. Can it be represented through the Rust API and C ABI?
 4. Does crash recovery have deterministic behavior?
